@@ -1,5 +1,5 @@
 var aws = {};
-aws = require('./aws.json');
+//aws = require('./aws.json');
 
 module.exports = {
   accessKeyId: process.env.AWS_ACCESSKEY || aws.AWS_ACCESSKEY,  // optional
