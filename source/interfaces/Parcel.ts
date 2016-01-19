@@ -1,6 +1,5 @@
-interface Parcel {
-  length?: number,
-  width?: number,
-  height?: number,
-  weight?: number
+interface SomeData {
+  item: number,
+  test?: string,
+  isTrue?: boolean
 }

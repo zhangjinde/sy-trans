@@ -1,5 +1,5 @@
 ///<reference path='../bases/Router-Options.ts'/>
-///<reference path='../interfaces/Address.ts'/>
+
 import ControllerBase from '../bases/Controller-Base';
 import YourService from '../services/your-service';
 const yourService = new YourService();
