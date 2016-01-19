@@ -1,6 +1,5 @@
 ///<reference path="../../typings/node/node.d.ts"/>
 const appConfig = require('../config/app');
-const easypost = require('node-easypost')(process.env.EASYPOST_APIKEY);
 const logger = require('winston').add(require('winston-graylog2'), {
 	name: 'Graylog',
 	silent: false,
@@ -22,6 +21,5 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 export default {
-	logger: logger,
-	easypost: easypost
+	logger: logger
 }

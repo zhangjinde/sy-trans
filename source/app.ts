@@ -19,7 +19,11 @@ app.use(allowOrigins([
   'https://manage.symphonycommerce.com'
 ]));
 
-app.use(yourController.routerPath, yourController.register());
+try {
+  app.use(yourController.routerPath, yourController.register());
+} catch(ex) {
+  console.error(ex);
+}
 
 (() => {
   

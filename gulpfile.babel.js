@@ -66,6 +66,13 @@ gulp.task('upload', () => {
   });
 });
 
+gulp.task('copy-config', () => {
+  return gulp.src([
+    './source/**/*.json'
+  ])
+    .pipe(gulp.dest(APP));
+});
+
 gulp.task('watch-ts', () => {
   return gulp.watch([
     './source/**/*.ts',
@@ -73,7 +80,7 @@ gulp.task('watch-ts', () => {
   ], ['compile']);
 });
 
-gulp.task('compile', () => {
+gulp.task('compile', ['copy-config'], () => {
   return gulp.src([
     './source/**/*.ts', 
     '!./node_modules/**',

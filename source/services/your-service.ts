@@ -12,22 +12,18 @@ export default class YourService extends ServiceBase {
 
   constructor() {
     super();
-    this.easypost = this.services.easypost;
     this.logger = this.services.logger;
   }
 
   private doSomethingPrivate(someData: any) {
     return new Promise((resolve, reject) => {
-      somethingPrivate.init({ 
-        someData: someData
-      }, (err, label) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-
-        resolve(label);
-      });
+      (() => {
+          if (someData) {
+              resolve("resolved");
+          } else {
+              reject("rejected!!");
+          }
+      })();
     });
   }
 
@@ -35,10 +31,14 @@ export default class YourService extends ServiceBase {
     const me = this;
     const queueResults = [];
     const someQueue = async.queue((thisData, next) => {
-      if (me.doSomethingPrivate(thisData)) {
-        queueResults.push(results);
+      me.doSomethingPrivate(thisData).then((result) => {
+        queueResults.push(result);
         next();
-      }
+      }).catch((ex) => {
+        queueResults.push({
+          error: ex
+        });
+      });
     });
 
     someQueue.push(body.jobs);
