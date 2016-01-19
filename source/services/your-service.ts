@@ -7,7 +7,6 @@ const async = require('async');
 import ServiceBase from '../bases/Service-Base';
 
 export default class YourService extends ServiceBase {
-  easypost: any;
   logger: any;
 
   constructor() {
