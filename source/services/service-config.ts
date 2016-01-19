@@ -1,5 +1,5 @@
 ///<reference path="../../typings/node/node.d.ts"/>
-
+const appConfig = require('../config/app');
 const easypost = require('node-easypost')(process.env.EASYPOST_APIKEY);
 const logger = require('winston').add(require('winston-graylog2'), {
 	name: 'Graylog',
@@ -12,7 +12,7 @@ const logger = require('winston').add(require('winston-graylog2'), {
     		port: 12201 
     	}],
     	facility: 'client-eng',
-    	hostname: process.env.APP_NAME
+      hostname: appConfig.applicationName
   	}
 });
 
