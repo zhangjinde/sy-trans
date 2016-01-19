@@ -1,0 +1,3 @@
+interface RouterOptions {
+	middleware?: any;
+}

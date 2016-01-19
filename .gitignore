@@ -1,0 +1,9 @@
+.DS_Store
+*.log
+node_modules
+typings
+app
+*.pem
+*.zip
+aws.json
+dev-config.json

@@ -1,0 +1,4 @@
+{
+    "command": "reinstall",
+    "config": "./tsd.json"
+}
