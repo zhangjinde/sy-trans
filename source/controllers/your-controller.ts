@@ -5,7 +5,7 @@ const yourService = new YourService();
 const managePermissions = require('symphony-api').managePermissions;
 const verifyHttps = require('symphony-api').verifyHttps;
 
-export default class EasypostController extends ControllerBase {
+export default class YourController extends ControllerBase {
   routerPath: string;
   routerOptions: RouterOptions;
 
