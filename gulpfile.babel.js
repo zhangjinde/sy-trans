@@ -9,9 +9,9 @@ const addsrc       = require('gulp-add-src'),
       tslint       = require('gulp-tslint'),
       del          = require('del'),
       zip          = require('gulp-zip'),
-      awsBeanstalk = require('node-aws-beanstalk'),
+      //awsBeanstalk = require('node-aws-beanstalk'),
       tsConfig     = require('./tsconfig.json'),
-      beanstalkCnf = require("./beanstalk-config.js"),
+      //beanstalkCnf = require("./beanstalk-config.js"),
       APP          = 'app',
       DEPLOY       = 'deploy';
 

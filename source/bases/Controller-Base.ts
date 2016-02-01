@@ -7,32 +7,28 @@ const _ = require(`lodash`);
 const express = require(`express`);
 
 export default class ControllerBase implements ControllerOptions {
-  router: any;
+    router: any;
 
-  constructor(routerOptions: RouterOptions) {
-    this.router = express.Router();
-    if (!routerOptions || !routerOptions.middleware) {
-      return;  
+    constructor(routerOptions: RouterOptions) {
+        let me = this;
+        me.router = express.Router({
+            mergeParams: true
+        });
+
+        if (!routerOptions || !routerOptions.middleware) {
+            return;
+        }
+
+        _.each(routerOptions.middleware, (middleware) => {
+            me.router.use(middleware);
+        });
     }
 
-    this.applyMiddleware(routerOptions.middleware);
-  }
+    createPath(params: EndpointParams) {
+        if (params.middleware) {
+            return this.router[params.type](params.path, ...params.middleware, params.callback);
+        }
 
-  private applyMiddleware(thisMiddleware: any, routePath?: string) {
-    const me = this;
-    if (!thisMiddleware || _.isEmpty(thisMiddleware)) {
-        return;
+        return this.router[params.type](params.path, params.callback);
     }
-
-    _.each(thisMiddleware, function(middleware) {
-      routePath ?
-        me.router.use(routePath, middleware) :
-        me.router.use(middleware);
-    });
-  }
-
-  createPath(params: EndpointParams) {
-    this.applyMiddleware(params.middleware, params.path);
-    this.router[params.type](params.path, params.callback);
-  }
 }
