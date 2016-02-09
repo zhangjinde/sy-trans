@@ -5,5 +5,14 @@ export default class ServiceBase {
 
   constructor() {
     this.services = services;
+    this.deferred = function() {
+    	var d = {};
+    	d.promise = new Promise((resolve, reject) => {
+    		d.resolve = resolve;
+    		d.reject = reject;
+    	});
+
+    	return d;
+    };
   }
 }
