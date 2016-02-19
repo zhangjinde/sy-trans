@@ -1,4 +1,5 @@
 ///<reference path='../bases/Router-Options.ts'/>
+///<reference path="../../typings/es6-promise/es6-promise.d.ts"/>
 import ControllerBase from '../bases/Controller-Base';
 import YourService from '../services/your-service';
 const yourService = new YourService();
@@ -18,30 +19,26 @@ export default class YourController extends ControllerBase {
 
   register() {
     this.createPath({
-      type: 'get',
+      type: "get",
       path: '/',
-      callback: (req, res) => {
-        res.send('hello world');
+      middlewares: [],
+      urlParams: [],
+      queryParams: [],
+      bodyParams: [],
+      callback: function() {
+        return Promise.resolve('hello world');
       }
     });
 
-  	this.createPath({
-      type: 'post',
-  		path: '/:site/do-things',
-      middleware: [managePermissions],
-      callback: (req, res) => {
-        yourService.doThings({
-          body: req.body
-        })
-          .then((result) => {
-            res.send(result);
-          }).catch((err) => {
-            res.send({
-              error: err
-            })
-          });
-  		}
-  	});
+    this.createPath({
+      type: "put",
+      path: '/:site/tags/',
+      middlewares: [managePermissions],
+      urlParams: ['site'],
+      queryParams: [],
+      bodyParams: [],
+      callback: yourService.doThings.bind(yourService)
+    });
 
     return this.router;
   }

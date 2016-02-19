@@ -11,6 +11,10 @@ const addsrc       = require('gulp-add-src'),
       zip          = require('gulp-zip'),
       //awsBeanstalk = require('node-aws-beanstalk'),
       tsConfig     = require('./tsconfig.json'),
+      mocha        = require('gulp-mocha'),
+      util         = require('gulp-util'),
+      argv         = require('yargs').argv,
+      exit         = require('gulp-exit'),
       //beanstalkCnf = require("./beanstalk-config.js"),
       APP          = 'app',
       DEPLOY       = 'deploy';
@@ -21,16 +25,49 @@ gulp.task('dev', () => {
     'tsd',
     'compile',
     'watch-ts', () => {
+      const devConfig = require('./dev-config.json');
+      return nodemon({
+        script: `./${APP}/app.js`,
+        env: devConfig
+      });
+    }
+  );
+});
 
-    const devConfig = require('./dev-config.json');
-    return nodemon({
-      script: `./${APP}/app.js`,
-      env: devConfig
-    });
+gulp.task('dev-test', () => {
+  return runSequence(
+    'build-clean',
+    'tsd',
+    'compile',
+    'test',
+    'watch-ts',
+    'start-test' 
+  )
+});
+
+gulp.task('start-test', () => {
+  const devConfig = require('./dev-config.json');
+  return nodemon({
+    script: `./${APP}/app.js`,
+    env: devConfig,
+    tasks: ['test']
   });
 });
 
-gulp.task('build-clean', function () {
+gulp.task('test', function () {
+  var folder = (argv.folder === undefined) ? '**' : argv.folder;
+  return gulp.src(['app/' + '**/*.js'])
+    .on('end', function () {
+      gulp.src('test/' + folder + '/*.js')
+        .pipe(mocha({
+            reporter: 'spec'
+        }))
+        .on('error', util.log)
+        .pipe(exit());
+    });
+});
+
+gulp.task('build-clean', () => {
     return del([
       `./${APP}`
     ],{

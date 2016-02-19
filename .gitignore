@@ -7,3 +7,4 @@ app
 *.zip
 aws.json
 dev-config.json
+.arcconfig

@@ -1,3 +1,3 @@
 interface RouterOptions {
-	middleware?: any;
+	middlewares?: any;
 }

@@ -2,5 +2,8 @@ interface EndpointParams {
 	path: string;
   type: string;
 	callback: Function;
-	middleware?: any;
+	middlewares?: any;
+  queryParams?: any;
+  urlParams?: any;
+  bodyParams?: any;
 }

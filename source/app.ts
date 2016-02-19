@@ -8,6 +8,7 @@ const allowOrigins = require('symphony-api').allowOrigins;
 import YourController from './controllers/your-controller';
 const yourController = new YourController();
 const app = express();
+let server;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({ extended: true }));
@@ -18,6 +19,12 @@ app.use(allowOrigins([
   'chrome-extension://fdmmgilgnpjigdojojpjoooidkmcomcm',
   'https://manage.symphonycommerce.com'
 ]));
+
+process.on('uncaughtException', (err) => {
+  console.log('Uncaught exception');
+  console.error(err.stack)
+  process.exit(1)
+});
 
 try {
   app.use(yourController.routerPath, yourController.register());
@@ -35,20 +42,20 @@ try {
   */
 
   const port = Number(process.env.PORT || 5000);
-  if (process.env.NODE_ENV === "development") {
-    https.createServer({
+  if (process.env.NODE_ENV == "development") {
+    server = https.createServer({
       key: fs.readFileSync(__dirname + '/../key.pem'),
       cert: fs.readFileSync(__dirname + '/../cert.pem')
     }, app).listen(port, function() {
+      console.log('https listening');
       console.log("Listening secure on " + port);
     });
-
-    return;
-  } 
-
-  app.listen(port, function() {
-    console.log("Listening on " + port);
-  });
+  } else {
+    server = app.listen(port + 1, function() {
+      console.log('regular listening');
+      console.log("Listening on " + port + 1);
+    });
+  }
 })();
 
-
+module.exports = server;
