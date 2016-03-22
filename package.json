@@ -28,6 +28,7 @@
     "lodash": "^3.10.1",
     "logfmt": "^1.2.0",
     "node-aws-beanstalk": "^3.0.0",
+    "promise-redis": "0.0.5",
     "request": "^2.55.0",
     "run-sequence": "^1.1.5",
     "symphony-api": "git+https://b714425c4d90faf956ee65ff8b5c08b823788445:x-oauth-basic@github.com/symphony-integrations/symphony-api.git",

@@ -11,17 +11,22 @@ export default class YourController extends ControllerBase {
   routerOptions: RouterOptions;
 
   constructor() {
-    this.routerPath = '/';
-    this.routerOptions = {};
+    super({
+      urlParams: ["site"]
+    });
 
-    super(this.routerOptions);
+    this.routerPath = '/:site';
   }
 
   register() {
     this.createPath({
       type: "get",
       path: '/',
-      middlewares: [],
+      apiCache: {
+        duration: 6000,
+        keys: ["site"]
+      },
+      middleware: [],
       urlParams: [],
       queryParams: [],
       bodyParams: [],
@@ -33,7 +38,7 @@ export default class YourController extends ControllerBase {
     this.createPath({
       type: "put",
       path: '/:site/tags/',
-      middlewares: [managePermissions],
+      middleware: [managePermissions],
       urlParams: ['site'],
       queryParams: [],
       bodyParams: [],
