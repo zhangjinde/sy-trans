@@ -117,6 +117,16 @@ gulp.task('watch-ts', () => {
   ], ['compile']);
 });
 
+
+gulp.task('compile-test', () => {
+  return runSequence(
+    'build-clean',
+    'tsd',
+    'compile',
+    'test'
+  )
+});
+
 gulp.task('compile', ['copy-config'], () => {
   return gulp.src([
     './source/**/*.ts', 

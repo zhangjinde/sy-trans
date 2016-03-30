@@ -23,7 +23,7 @@ describe('Your Thing', function() {
   // Create feed
   it('should return "hello world" on /site/things/ GET', function(done) {
     chai.request(app)
-      .get('/')
+      .get('/site/things')
       .query({
         'email': config.EMAIL,
         'password': config.PASSWORD,

@@ -21,11 +21,7 @@ export default class YourController extends ControllerBase {
   register() {
     this.createPath({
       type: "get",
-      path: '/',
-      apiCache: {
-        duration: 6000,
-        keys: ["site"]
-      },
+      path: '/things',
       middleware: [],
       urlParams: [],
       queryParams: [],
@@ -34,6 +30,21 @@ export default class YourController extends ControllerBase {
         return Promise.resolve('hello world');
       }
     });
+
+    this.createPath({
+      type: "put",
+      path: '/:site/cached',
+      cache: {
+        duration: 6000,
+        keys: ["site"]
+      },
+      urlParams: ['site'],
+      queryParams: [],
+      bodyParams: [],
+      callback: function() {
+        return Promise.resolve('hello world');
+      }
+    })
 
     this.createPath({
       type: "put",

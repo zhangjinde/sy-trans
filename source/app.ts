@@ -51,9 +51,9 @@ try {
       console.log("Listening secure on " + port);
     });
   } else {
-    server = app.listen(port + 1, function() {
+    server = app.listen(Number(port) + 1, function() {
       console.log('regular listening');
-      console.log("Listening on " + port + 1);
+      console.log("Listening on " + (port + 1));
     });
   }
 })();

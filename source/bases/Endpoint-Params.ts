@@ -3,7 +3,7 @@ interface EndpointParams {
   type: string;
 	callback: Function;
 	middleware?: any;
-  apiCache?: any;
+  cache?: any;
   queryParams?: any;
   urlParams?: any;
   bodyParams?: any;

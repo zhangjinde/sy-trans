@@ -35,13 +35,15 @@ const serviceConfig = (() => {
     }
   }
 
+  const redisConfigured = process.env.REDIS_AUTH && process.env.REDIS_PORT;
+
   return {
     db: symphonyApi.db("Client", {
       user: process.env.DB_CLIENT_USER,
       password: process.env.DB_PASSWORD,
       database: "clienteng"
     }),
-    redis: redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOST)
+    redis: redisConfigured && redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOST)
       .auth(process.env.REDIS_AUTH.split(":")[1])
   }
 })();
