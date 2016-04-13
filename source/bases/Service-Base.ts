@@ -28,7 +28,7 @@ export default class ServiceBase {
   readFile(file, options = {}) {
     const deferred = this.deferred();
     const thisFile = typeof file === 'object' ? file.file : file;
-    fs.readFile(`${__dirname}/${thisFile}`, options.encoding || 'utf8', (err, data) => {
+    fs.readFile(`${__dirname}/${thisFile}`, options["encoding"] || 'utf8', (err, data) => {
       if (err) {
         return deferred.reject(err);
       }

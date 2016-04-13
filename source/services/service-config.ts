@@ -48,6 +48,7 @@ const serviceConfig = (() => {
   }
 })();
 
-export default _.extend(serviceConfig, {
+
+export default _.extend({}, {
   logger: logger
 });

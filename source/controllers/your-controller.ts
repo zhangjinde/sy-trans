@@ -2,13 +2,15 @@
 ///<reference path="../../typings/es6-promise/es6-promise.d.ts"/>
 import ControllerBase from '../bases/Controller-Base';
 import YourService from '../services/your-service';
-const yourService = new YourService();
-const managePermissions = require('symphony-api').managePermissions;
-const verifyHttps = require('symphony-api').verifyHttps;
+
+const yourService = new YourService(),
+      managePermissions = require('symphony-api').managePermissions,
+      verifyHttps = require('symphony-api').verifyHttps;
 
 export default class YourController extends ControllerBase {
   routerPath: string;
   routerOptions: RouterOptions;
+  doThings: any;
 
   constructor() {
     super({
@@ -16,6 +18,7 @@ export default class YourController extends ControllerBase {
     });
 
     this.routerPath = '/:site';
+    this.doThings = yourService.doThings.bind(yourService)
   }
 
   register() {
@@ -42,7 +45,7 @@ export default class YourController extends ControllerBase {
       queryParams: [],
       bodyParams: [],
       callback: function() {
-        return Promise.resolve('hello world');
+        return Promise.resolve('hello world - cached');
       }
     })
 
@@ -53,7 +56,7 @@ export default class YourController extends ControllerBase {
       urlParams: ['site'],
       queryParams: [],
       bodyParams: [],
-      callback: yourService.doThings.bind(yourService)
+      callback: this.doThings
     });
 
     return this.router;
