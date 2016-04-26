@@ -31,7 +31,7 @@ const serviceConfig = (() => {
         password: "passw0rd",
         database: "clienteng"
       }),
-      redis: redis.createClient()
+      redis: false && redis.createClient()
     }
   }
 
