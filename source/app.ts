@@ -16,8 +16,8 @@ app.use(logfmt.requestLogger());
 
 app.use(allowOrigins([
   undefined,
-  'chrome-extension://fdmmgilgnpjigdojojpjoooidkmcomcm',
-  'https://manage.symphonycommerce.com'
+  'https://manage.symphonycommerce.com',
+  'https://manage-release.symphonycommerce.com'
 ]));
 
 process.on('uncaughtException', (err) => {
@@ -51,9 +51,9 @@ try {
       console.log("Listening secure on " + port);
     });
   } else {
-    server = app.listen(port + 1, function() {
+    server = app.listen(port, function() {
       console.log('regular listening');
-      console.log("Listening on " + port + 1);
+      console.log("Listening on " + port);
     });
   }
 })();
