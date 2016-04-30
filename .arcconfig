@@ -2,6 +2,6 @@
  "project.name" : "client-success-v2-test",
  "phabricator.uri" : "https://phabricator.symphonycommerce.com",
  "load" : [
-  "/Users/<your-username>/Desktop/arc/arcanist/src"
+  "/Users/RyanSmith/Desktop/arc/arcanist/src"
  ]
 }
