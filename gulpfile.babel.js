@@ -34,25 +34,6 @@ gulp.task('dev', () => {
   );
 });
 
-gulp.task('dev-test', () => {
-  return runSequence(
-    'build-clean',
-    'tsd',
-    'compile',
-    'test',
-    'watch-ts',
-    'start-test' 
-  )
-});
-
-gulp.task('start-test', () => {
-  const devConfig = require('./dev-config.json');
-  return nodemon({
-    script: `./${APP}/app.js`,
-    env: devConfig,
-    tasks: ['test']
-  });
-});
 
 gulp.task('test', function () {
   var folder = (argv.folder === undefined) ? '**' : argv.folder;
@@ -115,6 +96,16 @@ gulp.task('watch-ts', () => {
     './source/**/*.ts',
     '!gulpfile.babel.js'
   ], ['compile']);
+});
+
+
+gulp.task('compile-test', () => {
+  return runSequence(
+    'build-clean',
+    'tsd',
+    'compile',
+    'test'
+  )
 });
 
 gulp.task('compile', ['copy-config'], () => {

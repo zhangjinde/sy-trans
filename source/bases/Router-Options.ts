@@ -1,3 +1,6 @@
 interface RouterOptions {
-	middlewares?: any;
+  middleware?: any;
+  urlParams?: any;
+  queryParams?: any;
+  bodyParams?: any;
 }

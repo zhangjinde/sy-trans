@@ -2,26 +2,30 @@
 ///<reference path="../../typings/es6-promise/es6-promise.d.ts"/>
 import ControllerBase from '../bases/Controller-Base';
 import YourService from '../services/your-service';
-const yourService = new YourService();
-const managePermissions = require('symphony-api').managePermissions;
-const verifyHttps = require('symphony-api').verifyHttps;
+
+const yourService = new YourService(),
+      managePermissions = require('symphony-api').managePermissions,
+      verifyHttps = require('symphony-api').verifyHttps;
 
 export default class YourController extends ControllerBase {
   routerPath: string;
   routerOptions: RouterOptions;
+  doThings: any;
 
   constructor() {
-    this.routerPath = '/';
-    this.routerOptions = {};
+    super({
+      urlParams: ["site"]
+    });
 
-    super(this.routerOptions);
+    this.routerPath = '/:site';
+    this.doThings = yourService.doThings.bind(yourService)
   }
 
   register() {
     this.createPath({
       type: "get",
-      path: '/',
-      middlewares: [],
+      path: '/things',
+      middleware: [],
       urlParams: [],
       queryParams: [],
       bodyParams: [],
@@ -32,12 +36,27 @@ export default class YourController extends ControllerBase {
 
     this.createPath({
       type: "put",
-      path: '/:site/tags/',
-      middlewares: [managePermissions],
+      path: '/:site/cached',
+      cache: {
+        duration: 6000,
+        keys: ["site"]
+      },
       urlParams: ['site'],
       queryParams: [],
       bodyParams: [],
-      callback: yourService.doThings.bind(yourService)
+      callback: function() {
+        return Promise.resolve('hello world - cached');
+      }
+    })
+
+    this.createPath({
+      type: "put",
+      path: '/:site/tags/',
+      middleware: [managePermissions],
+      urlParams: ['site'],
+      queryParams: [],
+      bodyParams: [],
+      callback: this.doThings
     });
 
     return this.router;
