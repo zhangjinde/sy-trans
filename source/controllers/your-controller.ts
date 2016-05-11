@@ -4,8 +4,8 @@ import ControllerBase from '../bases/Controller-Base';
 import YourService from '../services/your-service';
 
 const yourService = new YourService(),
-      managePermissions = require('symphony-api').managePermissions,
-      verifyHttps = require('symphony-api').verifyHttps;
+      managePermissions = require('node-symphony').managePermissions,
+      verifyHttps = require('node-symphony').verifyHttps;
 
 export default class YourController extends ControllerBase {
   routerPath: string;
@@ -36,7 +36,7 @@ export default class YourController extends ControllerBase {
 
     this.createPath({
       type: "put",
-      path: '/:site/cached',
+      path: '/cached',
       cache: {
         duration: 6000,
         keys: ["site"]
@@ -51,11 +51,11 @@ export default class YourController extends ControllerBase {
 
     this.createPath({
       type: "put",
-      path: '/:site/tags/',
+      path: '/doThings',
       middleware: [managePermissions],
       urlParams: ['site'],
       queryParams: [],
-      bodyParams: [],
+      bodyParams: ['jobs'],
       callback: this.doThings
     });
 

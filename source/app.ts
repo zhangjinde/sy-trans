@@ -3,10 +3,12 @@ const bodyParser = require('body-parser');
 const logfmt = require('logfmt');
 const https = require('https');
 const fs = require('fs');
-const allowOrigins = require('symphony-api').allowOrigins;
+const allowOrigins = require('node-symphony').allowOrigins;
 
 import YourController from './controllers/your-controller';
+import HealthController from './controllers/health-controller';
 const yourController = new YourController();
+const healthController = new HealthController();
 const app = express();
 let server;
 
@@ -14,11 +16,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({ extended: true }));
 app.use(logfmt.requestLogger());
 
-app.use(allowOrigins([
-  undefined,
-  'https://manage.symphonycommerce.com',
-  'https://manage-release.symphonycommerce.com'
-]));
+// app.use(allowOrigins([
+//   undefined,
+//   'https://manage.symphonycommerce.com',
+//   'https://manage-release.symphonycommerce.com'
+// ]));
+
+app.use(allowOrigins(null));
 
 process.on('uncaughtException', (err) => {
   console.log('Uncaught exception');
@@ -28,6 +32,7 @@ process.on('uncaughtException', (err) => {
 
 try {
   app.use(yourController.routerPath, yourController.register());
+  app.use(healthController.routerPath, healthController.register());
 } catch(ex) {
   console.error(ex);
 }
