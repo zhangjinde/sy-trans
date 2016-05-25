@@ -5,10 +5,10 @@ const https = require('https');
 const fs = require('fs');
 const allowOrigins = require('node-symphony').allowOrigins;
 
-import YourController from './controllers/your-controller';
+import TransferController from './controllers/transfer-controller';
 import HealthController from './controllers/health-controller';
-const yourController = new YourController();
-const healthController = new HealthController();
+// const transferController = new TransferController();
+// const healthController = new HealthController();
 const app = express();
 let server;
 
@@ -31,7 +31,7 @@ process.on('uncaughtException', (err) => {
 });
 
 try {
-  app.use(yourController.routerPath, yourController.register());
+  app.use(transferController.routerPath, transferController.register());
   app.use(healthController.routerPath, healthController.register());
 } catch(ex) {
   console.error(ex);
