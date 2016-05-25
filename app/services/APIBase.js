@@ -1,3 +1,6 @@
+///<reference path="../../typings/node/node.d.ts"/>
+///<reference path="../interfaces/ApiOptions.ts"/>
+///<reference path="../interfaces/ApiHeaders.ts"/>
 "use strict";
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -12,12 +15,35 @@ var btoa2 = require("btoa");
 var APIBase = function (_Service_Base_1$defau) {
     _inherits(APIBase, _Service_Base_1$defau);
 
-    function APIBase() {
+    function APIBase(apiOptions) {
         _classCallCheck(this, APIBase);
 
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(APIBase).call(this));
 
-        _this.logger = _this.services.logger;
+        var manageEnv = apiOptions.env || "manage";
+        _this.headers = {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        };
+        _this.logger = apiOptions.logger ? apiOptions.logger : console;
+        _this.apiPath = apiOptions.apiPath;
+        _this.baseUrl = "https://" + manageEnv + ".symphonycommerce.com";
+        if (apiOptions.basicAuth) {
+            _this.headers["Authorization"] = apiOptions.basicAuth;
+            return _possibleConstructorReturn(_this);
+        }
+        if (apiOptions.email && apiOptions.password) {
+            _this.headers["Authorization"] = "Basic " + btoa2(apiOptions.email + ":" + apiOptions.password);
+            return _possibleConstructorReturn(_this);
+        }
+        if (apiOptions.sessionId) {
+            _this.headers["Cookie"] = "SPSESSIONID=" + apiOptions.sessionId;
+            return _possibleConstructorReturn(_this);
+        }
+        if (apiOptions.cookieAuth) {
+            _this.headers["Cookie"] = apiOptions.cookieAuth;
+            return _possibleConstructorReturn(_this);
+        }
         return _this;
     }
 
