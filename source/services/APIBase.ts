@@ -7,7 +7,6 @@ export default class APIBase extends ServiceBase {
 
   constructor() {
     super();
-
     this.logger = this.services.logger;
   }
 }
