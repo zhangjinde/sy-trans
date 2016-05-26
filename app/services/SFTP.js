@@ -1,3 +1,4 @@
+///<reference path='APIBase.ts'/>
 ///<reference path='../interfaces/ApiOptions.ts'/>
 "use strict";
 var __extends = (this && this.__extends) || function (d, b) {
@@ -14,7 +15,7 @@ var _ = require('lodash'), ssh2 = require('ssh2'), Readable = require('stream').
 var SFTP = (function (_super) {
     __extends(SFTP, _super);
     function SFTP(options) {
-        _super.call(this);
+        _super.call(this, options);
         // this.logger = this.services.logger; 
     }
     SFTP.prototype.connect = function (options, callback) {

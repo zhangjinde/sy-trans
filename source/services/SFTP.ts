@@ -1,3 +1,4 @@
+///<reference path='APIBase.ts'/>
 ///<reference path='../interfaces/ApiOptions.ts'/>
 
 import APIBase from './APIBase';
@@ -15,7 +16,7 @@ export default class SFTP extends APIBase {
   logger: any;
 
   constructor(options: ApiOptions) {
-    super();
+    super(options);
     // this.logger = this.services.logger; 
   }
 

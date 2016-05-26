@@ -4,7 +4,7 @@ module.exports = initModule;
 exports.__esModule = true;
 exports["default"] = initModule;
 function initModule(apiOptions) {
-    var apiClasses = bulkRequire(__dirname + './services/', [
+    var apiClasses = bulkRequire(__dirname + "/services", [
         "!(APIBase)*.js"
     ]);
     _.each(apiClasses, function (apiClass, apiName) {
