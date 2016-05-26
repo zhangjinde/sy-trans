@@ -1,20 +1,22 @@
+///<reference path='../interfaces/ApiOptions.ts'/>
+
 import APIBase from './APIBase';
 const _ = require('lodash'),
       ssh2 = require('ssh2'),
       Readable = require('stream').Readable,
-      async = require('async'),
-      slackLog = {
-        alertMessage: process.env.ALERT_MESSAGE,
-        channel: process.env.ALERT_CHANNEL
-      };
+      async = require('async');
+      // slackLog = {
+      //   alertMessage: process.env.ALERT_MESSAGE,
+      //   channel: process.env.ALERT_CHANNEL
+      // };
 
 export default class SFTP extends APIBase {
 
   logger: any;
 
-  constructor(config: any) {
+  constructor(options: ApiOptions) {
     super();
-    this.logger = this.services.logger; 
+    // this.logger = this.services.logger; 
   }
 
   connect (options: any, callback: any) {

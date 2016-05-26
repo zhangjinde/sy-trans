@@ -1,3 +1,4 @@
+///<reference path='../interfaces/ApiOptions.ts'/>
 "use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -12,22 +13,20 @@ var APIBase_1 = require('./APIBase');
 var _ = require('lodash'),
     ssh2 = require('ssh2'),
     Readable = require('stream').Readable,
-    async = require('async'),
-    slackLog = {
-    alertMessage: process.env.ALERT_MESSAGE,
-    channel: process.env.ALERT_CHANNEL
-};
+    async = require('async');
+// slackLog = {
+//   alertMessage: process.env.ALERT_MESSAGE,
+//   channel: process.env.ALERT_CHANNEL
+// };
 
 var SFTP = function (_APIBase_1$default) {
     _inherits(SFTP, _APIBase_1$default);
 
-    function SFTP(config) {
+    function SFTP(options) {
         _classCallCheck(this, SFTP);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SFTP).call(this));
-
-        _this.logger = _this.services.logger;
-        return _this;
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(SFTP).call(this));
+        // this.logger = this.services.logger;
     }
 
     _createClass(SFTP, [{
