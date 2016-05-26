@@ -6,4 +6,3 @@ node_modules
 aws.json
 dev-config.json
 .arcconfig
-typings
