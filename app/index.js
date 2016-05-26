@@ -5,9 +5,7 @@ var _ = require('lodash'),
 module.exports = initModule;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = initModule;
-function initModule() {
-    var apiOptions = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-
+function initModule(apiOptions) {
     var apiClasses = bulkRequire(__dirname + "/services", ["!(APIBase)*.js"]);
     _.each(apiClasses, function (apiClass, apiName) {
         if (_.isEmpty(apiOptions)) {
