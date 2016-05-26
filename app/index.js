@@ -46,7 +46,7 @@ module.exports.managePermissions = function (req, res, next) {
         return;
     }
     var site = req.params.site || req.query.site || req.body && req.body.site;
-    var Symphony = require("sy-trans")({
+    var Symphony = require("node-symphony")({
         basicAuth: req.get("Authorization"),
         cookieAuth: req.get("X-SPSESSION"),
         env: req.query.env

@@ -1,6 +1,6 @@
 interface ApiOptions {
     env?: string;
-    apiPath: string;
+    apiPath?: string;
     email?: string;
     basicAuth?: string;
     cookieAuth?: string;
