@@ -1,8 +1,8 @@
-///<reference path="../../typings/node/node.d.ts"/>
-///<reference path="../../typings/es6-promise/es6-promise.d.ts"/>
-///<reference path="../bases/Router-Options.ts"/>
+///<reference path="../typings/node/node.d.ts"/>
+///<reference path="../typings/es6-promise/es6-promise.d.ts"/>
+///<reference path="./bases/Router-Options.ts"/>
 
-import ServiceBase from '../bases/Service-Base';
+import ServiceBase from './bases/Service-Base';
 
 export default class HealthService extends ServiceBase {
   logger: any;

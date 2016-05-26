@@ -1,7 +1,7 @@
-///<reference path="../../typings/node/node.d.ts"/>
+///<reference path="../typings/node/node.d.ts"/>
 const _ = require("lodash"),
       // symphonyApi = require("symphony-api"),
-      appConfig = require('../config/app'),
+      appConfig = require('./config/app'),
       redis = require("promise-redis")(),
       logger = require('winston').add(require('winston-graylog2'), {
       	name: 'Graylog',

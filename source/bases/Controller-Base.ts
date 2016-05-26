@@ -2,7 +2,7 @@
 ///<reference path="Controller-Options.ts"/>
 ///<reference path="Router-Options.ts"/>
 ///<reference path="Endpoint-Params.ts"/>
-import services from '../services/service-config';
+import services from '../service-config';
 
 let _ = require(`lodash`);
 let express = require(`express`);

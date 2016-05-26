@@ -1,8 +1,8 @@
 "use strict";
-///<reference path="../../typings/node/node.d.ts"/>
+///<reference path="../typings/node/node.d.ts"/>
 var _ = require("lodash"), 
 // symphonyApi = require("symphony-api"),
-appConfig = require('../config/app'), redis = require("promise-redis")(), logger = require('winston').add(require('winston-graylog2'), {
+appConfig = require('./config/app'), redis = require("promise-redis")(), logger = require('winston').add(require('winston-graylog2'), {
     name: 'Graylog',
     silent: false,
     handleExceptions: true,

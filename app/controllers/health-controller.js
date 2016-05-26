@@ -7,8 +7,8 @@ var __extends = (this && this.__extends) || function (d, b) {
 ///<reference path='../bases/Router-Options.ts'/>
 ///<reference path="../../typings/es6-promise/es6-promise.d.ts"/>
 var Controller_Base_1 = require('../bases/Controller-Base');
-var Health_Service_1 = require('../services/Health-Service');
-var healthService = new Health_Service_1["default"](), verifyHttps = require('node-symphony').verifyHttps;
+var health_service_1 = require('../health-service');
+var healthService = new health_service_1["default"](), verifyHttps = require('node-symphony').verifyHttps;
 var YourController = (function (_super) {
     __extends(YourController, _super);
     function YourController() {

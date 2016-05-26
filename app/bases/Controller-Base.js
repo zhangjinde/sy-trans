@@ -3,7 +3,7 @@
 ///<reference path="Controller-Options.ts"/>
 ///<reference path="Router-Options.ts"/>
 ///<reference path="Endpoint-Params.ts"/>
-var service_config_1 = require('../services/service-config');
+var service_config_1 = require('../service-config');
 var _ = require("lodash");
 var express = require("express");
 var ControllerBase = (function () {

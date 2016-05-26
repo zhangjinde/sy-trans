@@ -1,6 +1,6 @@
 ///<reference path="../../typings/es6-promise/es6-promise.d.ts"/>
 
-import services from '../services/service-config';
+import services from '../service-config';
 const fs = require('fs');
 
 export default class ServiceBase {
