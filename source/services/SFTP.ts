@@ -17,7 +17,7 @@ export default class SFTP extends APIBase {
 
   constructor(options: ApiOptions) {
     super(options);
-    // this.logger = this.services.logger; 
+    this.logger = this.services.logger; 
   }
 
   connect (options: any, callback: any) {
@@ -83,6 +83,7 @@ export default class SFTP extends APIBase {
       });
 
     }).on('error', (err) => {
+      
       if (options.attempts > limit) {
         // me.logger.slackLog('Error connecting to sftp:', options.filename);
         return callback(err, null);
