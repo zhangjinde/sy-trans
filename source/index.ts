@@ -1,10 +1,10 @@
-const _ = require('lodash'),
-      bulkRequire = require("bulk-require");
+const _ = require('lodash');
+const bulkRequire = require("bulk-require");
 
 module.exports = initModule;
 export default initModule;
 
-function initModule(apiOptions: any) {
+function initModule(apiOptions: any = {}) {
   const apiClasses = bulkRequire(`${__dirname}/services`, [
     "!(APIBase)*.js"
   ]);

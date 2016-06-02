@@ -8,6 +8,9 @@ const btoa2 = require(`btoa`);
 
 export default class APIBase implements ApiOptions {
 
+  env: string;
+  headers: ApiHeaders;
+  baseUrl: string;
   logger: any;
 
   constructor(apiOptions: ApiOptions) {
