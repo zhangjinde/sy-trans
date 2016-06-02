@@ -6,10 +6,6 @@ const _ = require('lodash'),
       ssh2 = require('ssh2'),
       Readable = require('stream').Readable,
       async = require('async');
-      // slackLog = {
-      //   alertMessage: process.env.ALERT_MESSAGE,
-      //   channel: process.env.ALERT_CHANNEL
-      // };
 
 export default class SFTP extends APIBase {
 
@@ -17,7 +13,7 @@ export default class SFTP extends APIBase {
 
   constructor(options: ApiOptions) {
     super(options);
-    // this.logger = this.services.logger; 
+    this.logger = this.services.logger; 
   }
 
   connect (options: any, callback: any) {
@@ -75,7 +71,6 @@ export default class SFTP extends APIBase {
           conn.end();
           return callback(null, content);
         }).on('error', (err) => {
-          // me.logger.slackLog('Error reading file:', options.filename);
           sftp.end();
           return callback(err, null);
         });
@@ -83,8 +78,8 @@ export default class SFTP extends APIBase {
       });
 
     }).on('error', (err) => {
+
       if (options.attempts > limit) {
-        // me.logger.slackLog('Error connecting to sftp:', options.filename);
         return callback(err, null);
       }
 
@@ -123,7 +118,6 @@ export default class SFTP extends APIBase {
 
     }).on('error', (err) => {
       if (options.attempts > limit) {
-        // me.logger.slackLog('Error connecting to sftp:', options.filepath);
         return callback(err);
       }
       me.logger.error('Error connecting to SFTP:', options.filepath);
@@ -150,7 +144,6 @@ export default class SFTP extends APIBase {
 
         sftp.rename(fromPath, toPath, (err, response) => {
           if (err) {
-            // me.slackLog('Error moving original file:', options.filepath);
             return callback(err, null);
           }
           sftp.end();
@@ -160,7 +153,6 @@ export default class SFTP extends APIBase {
 
     }).on('error', (err) => {
       if (options.attempts > limit) {
-        // me.logger.slackLog('Error connecting to sftp:', options.filepath);
         return callback(err);
       }
       me.logger.error('Error connecting to SFTP:', options.filepath);

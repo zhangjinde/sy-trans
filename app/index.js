@@ -1,9 +1,11 @@
 "use strict";
-var _ = require('lodash'), bulkRequire = require("bulk-require");
+var _ = require('lodash');
+var bulkRequire = require("bulk-require");
 module.exports = initModule;
 exports.__esModule = true;
 exports["default"] = initModule;
 function initModule(apiOptions) {
+    if (apiOptions === void 0) { apiOptions = {}; }
     var apiClasses = bulkRequire(__dirname + "/services", [
         "!(APIBase)*.js"
     ]);
