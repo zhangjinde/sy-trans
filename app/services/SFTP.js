@@ -12,7 +12,7 @@ var SFTP = (function (_super) {
     __extends(SFTP, _super);
     function SFTP(options) {
         _super.call(this, options);
-        this.logger = this.services.logger;
+        // this.logger = this.services.logger; 
     }
     SFTP.prototype.connect = function (options, callback) {
         var me = this, conn = new ssh2();
