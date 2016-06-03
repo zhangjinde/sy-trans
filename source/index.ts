@@ -6,7 +6,7 @@ export default initModule;
 
 function initModule(apiOptions: any = {}) {
   const apiClasses = bulkRequire(`${__dirname}/services`, [
-    "!(APIBase)*.js"
+    "SFTP.js"
   ]);
 
   _.each(apiClasses, (apiClass, apiName) => {

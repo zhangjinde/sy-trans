@@ -40,7 +40,7 @@ var SFTP = (function (_super) {
         var me = this, conn = new ssh2(), limit = 20;
         options.attempts = 0;
         conn.on('ready', function () {
-            me.logger.debug('connected to sftp to download file');
+            // me.logger.debug('connected to sftp to download file');
             conn.sftp(function (err, sftp) {
                 var stream = sftp.createReadStream(options.filepath);
                 var content = "";
@@ -67,14 +67,14 @@ var SFTP = (function (_super) {
         var me = this, conn = new ssh2(), limit = 20;
         options.attempts = 0;
         conn.on('ready', function () {
-            me.logger.debug('connected');
+            // me.logger.debug('connected');
             conn.sftp(function (err, sftp) {
                 var writeStream = sftp.createWriteStream(options.filepath);
                 var readStream = new Readable();
                 readStream.push(options.content);
                 readStream.push(null);
                 writeStream.on('close', function () {
-                    me.logger.info('Successfully uploaded file to FTPS server:', options.filepath);
+                    // me.logger.info('Successfully uploaded file to FTPS server:', options.filepath);
                     conn.end();
                     return callback(null, options.filepath);
                 });
@@ -84,7 +84,7 @@ var SFTP = (function (_super) {
             if (options.attempts > limit) {
                 return callback(err);
             }
-            me.logger.error('Error connecting to SFTP:', options.filepath);
+            // me.logger.error('Error connecting to SFTP:', options.filepath);
             options.attempts++;
             conn.connect(options);
         });
@@ -109,7 +109,7 @@ var SFTP = (function (_super) {
             if (options.attempts > limit) {
                 return callback(err);
             }
-            me.logger.error('Error connecting to SFTP:', options.filepath);
+            // me.logger.error('Error connecting to SFTP:', options.filepath);
             options.attempts++;
             conn.connect(options);
         });
