@@ -8,10 +8,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var APIBase_1 = require('./APIBase');
 var _ = require('lodash'), ssh2 = require('ssh2'), Readable = require('stream').Readable, async = require('async');
-// slackLog = {
-//   alertMessage: process.env.ALERT_MESSAGE,
-//   channel: process.env.ALERT_CHANNEL
-// };
 var SFTP = (function (_super) {
     __extends(SFTP, _super);
     function SFTP(options) {
@@ -54,14 +50,12 @@ var SFTP = (function (_super) {
                     conn.end();
                     return callback(null, content);
                 }).on('error', function (err) {
-                    // me.logger.slackLog('Error reading file:', options.filename);
                     sftp.end();
                     return callback(err, null);
                 });
             });
         }).on('error', function (err) {
             if (options.attempts > limit) {
-                // me.logger.slackLog('Error connecting to sftp:', options.filename);
                 return callback(err, null);
             }
             options.attempts++;
@@ -88,7 +82,6 @@ var SFTP = (function (_super) {
             });
         }).on('error', function (err) {
             if (options.attempts > limit) {
-                // me.logger.slackLog('Error connecting to sftp:', options.filepath);
                 return callback(err);
             }
             me.logger.error('Error connecting to SFTP:', options.filepath);
@@ -106,7 +99,6 @@ var SFTP = (function (_super) {
                     return callback(err, null);
                 sftp.rename(fromPath, toPath, function (err, response) {
                     if (err) {
-                        // me.slackLog('Error moving original file:', options.filepath);
                         return callback(err, null);
                     }
                     sftp.end();
@@ -115,7 +107,6 @@ var SFTP = (function (_super) {
             });
         }).on('error', function (err) {
             if (options.attempts > limit) {
-                // me.logger.slackLog('Error connecting to sftp:', options.filepath);
                 return callback(err);
             }
             me.logger.error('Error connecting to SFTP:', options.filepath);
