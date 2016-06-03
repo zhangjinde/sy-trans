@@ -13,7 +13,7 @@ export default class SFTP extends APIBase {
 
   constructor(options: ApiOptions) {
     super(options);
-    this.logger = this.services.logger; 
+    // this.logger = this.services.logger; 
   }
 
   connect (options: any, callback: any) {
