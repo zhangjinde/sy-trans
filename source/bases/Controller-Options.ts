@@ -1,3 +1,0 @@
-interface ControllerOptions {
-	router: any;
-}

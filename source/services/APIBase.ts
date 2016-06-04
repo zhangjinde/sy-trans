@@ -21,8 +21,6 @@ export default class APIBase implements ApiOptions {
       "Content-Type": `application/json`
     };
 
-    this.logger = apiOptions.logger ? apiOptions.logger : console;
-    this.apiPath = apiOptions.apiPath;
     this.baseUrl = `https://${manageEnv}.symphonycommerce.com`;
 
     if (apiOptions.basicAuth) {

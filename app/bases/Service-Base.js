@@ -1,10 +1,8 @@
 ///<reference path="../../typings/es6-promise/es6-promise.d.ts"/>
 "use strict";
-var service_config_1 = require('../service-config');
 var fs = require('fs');
 var ServiceBase = (function () {
     function ServiceBase() {
-        this.services = service_config_1["default"];
     }
     ServiceBase.prototype.deferred = function () {
         var d = {

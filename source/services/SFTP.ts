@@ -13,7 +13,6 @@ export default class SFTP extends APIBase {
 
   constructor(options: ApiOptions) {
     super(options);
-    // this.logger = this.services.logger; 
   }
 
   connect (options: any, callback: any) {
@@ -58,7 +57,7 @@ export default class SFTP extends APIBase {
     options.attempts = 0;
 
     conn.on('ready', () => {
-      // me.logger.debug('connected to sftp to download file');
+
       conn.sftp((err, sftp) => {
 
         const stream = sftp.createReadStream(options.filepath);
@@ -99,7 +98,7 @@ export default class SFTP extends APIBase {
     options.attempts = 0;
 
     conn.on('ready', () => {
-      // me.logger.debug('connected');
+
       conn.sftp((err, sftp) => {
 
         const writeStream = sftp.createWriteStream(options.filepath);
@@ -108,7 +107,6 @@ export default class SFTP extends APIBase {
         readStream.push(null);
 
         writeStream.on('close', () => {
-          // me.logger.info('Successfully uploaded file to FTPS server:', options.filepath);
           conn.end();
           return callback(null, options.filepath);
         });
@@ -120,7 +118,6 @@ export default class SFTP extends APIBase {
       if (options.attempts > limit) {
         return callback(err);
       }
-      // me.logger.error('Error connecting to SFTP:', options.filepath);
       options.attempts++;
       conn.connect(options);
     });
@@ -155,7 +152,6 @@ export default class SFTP extends APIBase {
       if (options.attempts > limit) {
         return callback(err);
       }
-      // me.logger.error('Error connecting to SFTP:', options.filepath);
       options.attempts++;
       conn.connect(options);
     });

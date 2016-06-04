@@ -11,8 +11,6 @@ var APIBase = (function () {
             "Accept": "application/json",
             "Content-Type": "application/json"
         };
-        this.logger = apiOptions.logger ? apiOptions.logger : console;
-        this.apiPath = apiOptions.apiPath;
         this.baseUrl = "https://" + manageEnv + ".symphonycommerce.com";
         if (apiOptions.basicAuth) {
             this.headers["Authorization"] = apiOptions.basicAuth;
