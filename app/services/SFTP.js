@@ -26,14 +26,15 @@ var SFTP = (function (_super) {
         var conn = new ssh2(), deferred = this.deferred();
         conn.connect(function (err, sftp) {
             if (err)
-                return deferred.reject(err);
+                deferred.reject(err);
             sftp.readdir(path, function (err, list) {
                 if (err)
-                    return deferred.reject(err);
+                    deferred.reject(err);
                 sftp.end();
-                return deferred.resolve(list);
+                deferred.resolve(list);
             });
         });
+        return deferred.promise;
     };
     SFTP.prototype.readFile = function (options, path) {
         var conn = new ssh2(), deferred = this.deferred(), limit = 20;
@@ -46,20 +47,21 @@ var SFTP = (function (_super) {
                     content += chunk;
                 }).on('end', function () {
                     conn.end();
-                    return deferred.resolve(content);
+                    deferred.resolve(content);
                 }).on('error', function (err) {
                     sftp.end();
-                    return deferred.reject(err);
+                    deferred.reject(err);
                 });
             });
         }).on('error', function (err) {
             if (options.attempts > limit) {
-                return deferred.reject(err);
+                deferred.reject(err);
             }
             options.attempts++;
             conn.connect(options);
         });
         conn.connect(options);
+        return deferred.promise;
     };
     SFTP.prototype.writeFile = function (options, path) {
         var conn = new ssh2(), deferred = this.deferred(), limit = 20;
@@ -72,18 +74,19 @@ var SFTP = (function (_super) {
                 readStream.push(null);
                 writeStream.on('close', function () {
                     conn.end();
-                    return deferred.resolve(path);
+                    deferred.resolve(path);
                 });
                 readStream.pipe(writeStream);
             });
         }).on('error', function (err) {
             if (options.attempts > limit) {
-                return deferred.reject(err);
+                deferred.reject(err);
             }
             options.attempts++;
             conn.connect(options);
         });
         conn.connect(options);
+        return deferred.promise;
     };
     SFTP.prototype.moveFile = function (fromPath, toPath, options) {
         var conn = new ssh2(), deferred = this.deferred(), limit = 20;
@@ -91,23 +94,24 @@ var SFTP = (function (_super) {
         conn.on('ready', function () {
             conn.sftp(function (err, sftp) {
                 if (err)
-                    return deferred.reject(err);
+                    deferred.reject(err);
                 sftp.rename(fromPath, toPath, function (err, response) {
                     if (err) {
-                        return deferred.reject(err);
+                        deferred.reject(err);
                     }
                     sftp.end();
-                    return deferred.resolve(response);
+                    deferred.resolve(response);
                 });
             });
         }).on('error', function (err) {
             if (options.attempts > limit) {
-                return deferred.reject(err);
+                deferred.reject(err);
             }
             options.attempts++;
             conn.connect(options);
         });
         conn.connect(options);
+        return deferred.promise;
     };
     return SFTP;
 }(APIBase_1["default"]));
