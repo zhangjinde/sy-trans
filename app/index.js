@@ -7,7 +7,7 @@ exports["default"] = initModule;
 function initModule(apiOptions) {
     if (apiOptions === void 0) { apiOptions = {}; }
     var apiClasses = bulkRequire(__dirname + "/services", [
-        "SFTP.js"
+        "SFTP.js", "FTP.js"
     ]);
     _.each(apiClasses, function (apiClass, apiName) {
         if (_.isEmpty(apiOptions)) {
