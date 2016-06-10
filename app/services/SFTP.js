@@ -22,87 +22,87 @@ var SFTP = (function (_super) {
         });
         conn.connect(options);
     };
-    SFTP.prototype.readDir = function (path, callback) {
-        var me = this, conn = new ssh2();
+    SFTP.prototype.readDir = function (options, path) {
+        var conn = new ssh2(), deferred = this.deferred();
         conn.connect(function (err, sftp) {
             if (err)
-                return callback(err, null);
+                return deferred.reject(err);
             sftp.readdir(path, function (err, list) {
                 if (err)
-                    return callback(err, null);
+                    return deferred.reject(err);
                 sftp.end();
-                return callback(null, list);
+                return deferred.resolve(list);
             });
         });
     };
-    SFTP.prototype.readFile = function (options, callback) {
-        var me = this, conn = new ssh2(), limit = 20;
+    SFTP.prototype.readFile = function (options, path) {
+        var conn = new ssh2(), deferred = this.deferred(), limit = 20;
         options.attempts = 0;
         conn.on('ready', function () {
             conn.sftp(function (err, sftp) {
-                var stream = sftp.createReadStream(options.filepath);
+                var stream = sftp.createReadStream(path);
                 var content = "";
                 stream.on('data', function (chunk) {
                     content += chunk;
                 }).on('end', function () {
                     conn.end();
-                    return callback(null, content);
+                    return deferred.resolve(content);
                 }).on('error', function (err) {
                     sftp.end();
-                    return callback(err, null);
+                    return deferred.reject(err);
                 });
             });
         }).on('error', function (err) {
             if (options.attempts > limit) {
-                return callback(err, null);
+                return deferred.reject(err);
             }
             options.attempts++;
             conn.connect(options);
         });
         conn.connect(options);
     };
-    SFTP.prototype.writeFile = function (options, callback) {
-        var me = this, conn = new ssh2(), limit = 20;
+    SFTP.prototype.writeFile = function (options, path) {
+        var conn = new ssh2(), deferred = this.deferred(), limit = 20;
         options.attempts = 0;
         conn.on('ready', function () {
             conn.sftp(function (err, sftp) {
-                var writeStream = sftp.createWriteStream(options.filepath);
+                var writeStream = sftp.createWriteStream(path);
                 var readStream = new Readable();
                 readStream.push(options.content);
                 readStream.push(null);
                 writeStream.on('close', function () {
                     conn.end();
-                    return callback(null, options.filepath);
+                    return deferred.resolve(path);
                 });
                 readStream.pipe(writeStream);
             });
         }).on('error', function (err) {
             if (options.attempts > limit) {
-                return callback(err);
+                return deferred.reject(err);
             }
             options.attempts++;
             conn.connect(options);
         });
         conn.connect(options);
     };
-    SFTP.prototype.moveFile = function (fromPath, toPath, options, callback) {
-        var me = this, conn = new ssh2(), limit = 20;
+    SFTP.prototype.moveFile = function (fromPath, toPath, options) {
+        var conn = new ssh2(), deferred = this.deferred(), limit = 20;
         options.attempts = 0;
         conn.on('ready', function () {
             conn.sftp(function (err, sftp) {
                 if (err)
-                    return callback(err, null);
+                    return deferred.reject(err);
                 sftp.rename(fromPath, toPath, function (err, response) {
                     if (err) {
-                        return callback(err, null);
+                        return deferred.reject(err);
                     }
                     sftp.end();
-                    return callback(err, response);
+                    return deferred.resolve(response);
                 });
             });
         }).on('error', function (err) {
             if (options.attempts > limit) {
-                return callback(err);
+                return deferred.reject(err);
             }
             options.attempts++;
             conn.connect(options);

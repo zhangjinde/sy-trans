@@ -12,7 +12,6 @@ var FTP = (function (_super) {
     __extends(FTP, _super);
     function FTP(options) {
         _super.call(this, options);
-        // this.logger = this.services.logger; 
     }
     FTP.prototype.readDir = function (options, path) {
         var deferred = this.deferred();

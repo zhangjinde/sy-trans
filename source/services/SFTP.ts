@@ -30,28 +30,28 @@ export default class SFTP extends APIBase {
 
   }
 
-  readDir (path: string, callback: any) {
+  readDir (options: any, path: string) {
 
-    const me = this,
-          conn = new ssh2();
+    const conn = new ssh2(),
+          deferred = this.deferred();
 
     conn.connect((err, sftp) => {
-      if (err) return callback(err, null);
+      if (err) return deferred.reject(err);
 
       sftp.readdir(path, (err, list) => {
-        if (err) return callback(err, null);
+        if (err) return deferred.reject(err);
 
         sftp.end();
-        return callback(null, list);
+        return deferred.resolve(list);
       });
     });
 
   }
 
-  readFile (options: any, callback: any) {
+  readFile (options: any, path: string) {
 
-    const me = this,
-          conn = new ssh2(),
+    const conn = new ssh2(),
+          deferred = this.deferred(),
           limit = 20;
 
     options.attempts = 0;
@@ -59,8 +59,7 @@ export default class SFTP extends APIBase {
     conn.on('ready', () => {
 
       conn.sftp((err, sftp) => {
-
-        const stream = sftp.createReadStream(options.filepath);
+        const stream = sftp.createReadStream(path);
 
         let content = "";
 
@@ -68,18 +67,17 @@ export default class SFTP extends APIBase {
           content += chunk;
         }).on('end', () => {
           conn.end();
-          return callback(null, content);
+          return deferred.resolve(content);
         }).on('error', (err) => {
           sftp.end();
-          return callback(err, null);
+          return deferred.reject(err);
         });
 
       });
 
     }).on('error', (err) => {
-
       if (options.attempts > limit) {
-        return callback(err, null);
+        return deferred.reject(err);
       }
 
       options.attempts++;
@@ -89,26 +87,25 @@ export default class SFTP extends APIBase {
     conn.connect(options);
   }
 
-  writeFile (options: any, callback: any) {
+  writeFile (options: any, path: string) {
 
-    const me = this,
-          conn = new ssh2(),
+    const conn = new ssh2(),
+          deferred = this.deferred(),
           limit = 20;
 
     options.attempts = 0;
 
     conn.on('ready', () => {
-
       conn.sftp((err, sftp) => {
 
-        const writeStream = sftp.createWriteStream(options.filepath);
+        const writeStream = sftp.createWriteStream(path);
         const readStream = new Readable();
         readStream.push(options.content);
         readStream.push(null);
 
         writeStream.on('close', () => {
           conn.end();
-          return callback(null, options.filepath);
+          return deferred.resolve(path);
         });
 
         readStream.pipe(writeStream);
@@ -116,7 +113,7 @@ export default class SFTP extends APIBase {
 
     }).on('error', (err) => {
       if (options.attempts > limit) {
-        return callback(err);
+        return deferred.reject(err);
       }
       options.attempts++;
       conn.connect(options);
@@ -126,10 +123,10 @@ export default class SFTP extends APIBase {
 
   }
 
-  moveFile (fromPath: string, toPath: string, options: any, callback: any) {
+  moveFile (fromPath: string, toPath: string, options: any) {
 
-    const me = this,
-          conn = new ssh2(),
+    const conn = new ssh2(),
+          deferred = this.deferred(),
           limit = 20;
 
     options.attempts = 0;
@@ -137,20 +134,20 @@ export default class SFTP extends APIBase {
     conn.on('ready', () => {
 
       conn.sftp((err, sftp) => {
-        if (err) return callback(err, null);
+        if (err) return deferred.reject(err);
 
         sftp.rename(fromPath, toPath, (err, response) => {
           if (err) {
-            return callback(err, null);
+            return deferred.reject(err);
           }
           sftp.end();
-          return callback(err, response);
+          return deferred.resolve(response);
         });
       });
 
     }).on('error', (err) => {
       if (options.attempts > limit) {
-        return callback(err);
+        return deferred.reject(err);
       }
       options.attempts++;
       conn.connect(options);

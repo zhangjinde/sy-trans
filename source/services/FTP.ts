@@ -13,7 +13,6 @@ export default class FTP extends APIBase {
 
   constructor(options: ApiOptions) {
     super(options);
-    // this.logger = this.services.logger; 
   }
 
   readDir(options: any, path: string) {
