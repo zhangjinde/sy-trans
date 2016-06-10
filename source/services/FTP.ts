@@ -21,25 +21,25 @@ export default class FTP extends APIBase {
     const me = this,
           ftp = new nodeFTP();
     ftp.on('ready', () => {
-      ftp.list(options.directory, (err, list) => {
+      ftp.list(path, (err, list) => {
         if (err) {
           // throw err;
-          return deferred.reject(err);
+          deferred.reject(err);
         }
-        return deferred.promise;
+        deferred.resolve(list);      
       });
     });
 
 
     ftp.on('error', (err) => {
-      return deferred.reject(err);
+      deferred.reject(err);
     });
 
     ftp.connect(options);
-
+    return deferred.promise;
   }
 
-  readFile (options: any, path: string) {
+  readFile(options: any, path: string) {
 
     const deferred = this.deferred();
   
@@ -48,7 +48,7 @@ export default class FTP extends APIBase {
     ftp.on('ready', () => {
       ftp.get(path, (err, stream) => {
         if (err) {
-          return deferred.reject(err);
+          deferred.reject(err);
         }
 
         let content = "";
@@ -64,7 +64,6 @@ export default class FTP extends APIBase {
       })
     });
     ftp.connect(options);
-
     return deferred.promise;
 
   }

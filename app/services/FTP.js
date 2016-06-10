@@ -17,18 +17,19 @@ var FTP = (function (_super) {
         var deferred = this.deferred();
         var me = this, ftp = new nodeFTP();
         ftp.on('ready', function () {
-            ftp.list(options.directory, function (err, list) {
+            ftp.list(path, function (err, list) {
                 if (err) {
                     // throw err;
-                    return deferred.reject(err);
+                    deferred.reject(err);
                 }
-                return deferred.promise;
+                deferred.resolve(list);
             });
         });
         ftp.on('error', function (err) {
-            return deferred.reject(err);
+            deferred.reject(err);
         });
         ftp.connect(options);
+        return deferred.promise;
     };
     FTP.prototype.readFile = function (options, path) {
         var deferred = this.deferred();
@@ -36,7 +37,7 @@ var FTP = (function (_super) {
         ftp.on('ready', function () {
             ftp.get(path, function (err, stream) {
                 if (err) {
-                    return deferred.reject(err);
+                    deferred.reject(err);
                 }
                 var content = "";
                 stream.on('data', function (chunk) {
