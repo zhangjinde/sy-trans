@@ -6,7 +6,7 @@
 import ServiceBase from './../bases/Service-Base';
 const btoa2 = require(`btoa`);
 
-export default class APIBase implements ApiOptions {
+export default class APIBase extends ServiceBase implements ApiOptions {
 
   env: string;
   headers: ApiHeaders;
@@ -14,7 +14,7 @@ export default class APIBase implements ApiOptions {
   logger: any;
 
   constructor(apiOptions: ApiOptions) {
-    // super();
+    super();
     let manageEnv = apiOptions.env || `manage`;
     this.headers = {
       "Accept": `application/json`,
