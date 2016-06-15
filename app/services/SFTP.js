@@ -22,12 +22,12 @@ var SFTP = (function (_super) {
         });
         conn.connect(options);
     };
-    SFTP.prototype.readDir = function (options, path) {
+    SFTP.prototype.readDir = function (options, file) {
         var conn = new ssh2(), deferred = this.deferred();
         conn.connect(function (err, sftp) {
             if (err)
                 deferred.reject(err);
-            sftp.readdir(path, function (err, list) {
+            sftp.readdir(file.path, function (err, list) {
                 if (err)
                     deferred.reject(err);
                 sftp.end();
@@ -36,12 +36,12 @@ var SFTP = (function (_super) {
         });
         return deferred.promise;
     };
-    SFTP.prototype.readFile = function (options, path) {
+    SFTP.prototype.readFile = function (options, file) {
         var conn = new ssh2(), deferred = this.deferred(), limit = 20;
         options.attempts = 0;
         conn.on('ready', function () {
             conn.sftp(function (err, sftp) {
-                var stream = sftp.createReadStream(path);
+                var stream = sftp.createReadStream(file.path);
                 var content = "";
                 stream.on('data', function (chunk) {
                     content += chunk;
@@ -63,18 +63,18 @@ var SFTP = (function (_super) {
         conn.connect(options);
         return deferred.promise;
     };
-    SFTP.prototype.writeFile = function (options, path) {
+    SFTP.prototype.writeFile = function (options, file) {
         var conn = new ssh2(), deferred = this.deferred(), limit = 20;
         options.attempts = 0;
         conn.on('ready', function () {
             conn.sftp(function (err, sftp) {
-                var writeStream = sftp.createWriteStream(path);
+                var writeStream = sftp.createWriteStream(file.path);
                 var readStream = new Readable();
-                readStream.push(options.content);
+                readStream.push(file.content);
                 readStream.push(null);
                 writeStream.on('close', function () {
                     conn.end();
-                    deferred.resolve(path);
+                    deferred.resolve(file.path);
                 });
                 readStream.pipe(writeStream);
             });
