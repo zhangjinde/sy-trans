@@ -49,7 +49,7 @@ export default class SFTP extends APIBase {
     return deferred.promise;
   }
 
-  readFile (options: any, file: string) {
+  readFile (options: any, file: any) {
 
     const conn = new ssh2(),
           deferred = this.deferred(),
@@ -89,7 +89,7 @@ export default class SFTP extends APIBase {
     return deferred.promise;
   }
 
-  writeFile (options: any, file: string) {
+  writeFile (options: any, file: any) {
 
     const conn = new ssh2(),
           deferred = this.deferred(),
