@@ -30,7 +30,7 @@ export default class SFTP extends APIBase {
 
   }
 
-  readDir (options: any, path: string) {
+  readDir (options: any, file: any) {
 
     const conn = new ssh2(),
           deferred = this.deferred();
@@ -38,7 +38,7 @@ export default class SFTP extends APIBase {
     conn.connect((err, sftp) => {
       if (err) deferred.reject(err);
 
-      sftp.readdir(path, (err, list) => {
+      sftp.readdir(file.path, (err, list) => {
         if (err) deferred.reject(err);
 
         sftp.end();
@@ -49,7 +49,7 @@ export default class SFTP extends APIBase {
     return deferred.promise;
   }
 
-  readFile (options: any, path: string) {
+  readFile (options: any, file: any) {
 
     const conn = new ssh2(),
           deferred = this.deferred(),
@@ -60,7 +60,7 @@ export default class SFTP extends APIBase {
     conn.on('ready', () => {
 
       conn.sftp((err, sftp) => {
-        const stream = sftp.createReadStream(path);
+        const stream = sftp.createReadStream(file.path);
 
         let content = "";
 
@@ -89,7 +89,7 @@ export default class SFTP extends APIBase {
     return deferred.promise;
   }
 
-  writeFile (options: any, path: string) {
+  writeFile (options: any, file: any) {
 
     const conn = new ssh2(),
           deferred = this.deferred(),
@@ -100,14 +100,14 @@ export default class SFTP extends APIBase {
     conn.on('ready', () => {
       conn.sftp((err, sftp) => {
 
-        const writeStream = sftp.createWriteStream(path);
+        const writeStream = sftp.createWriteStream(file.path);
         const readStream = new Readable();
-        readStream.push(options.content);
+        readStream.push(file.content);
         readStream.push(null);
 
         writeStream.on('close', () => {
           conn.end();
-          deferred.resolve(path);
+          deferred.resolve(file.path);
         });
 
         readStream.pipe(writeStream);
