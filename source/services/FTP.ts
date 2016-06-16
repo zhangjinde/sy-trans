@@ -5,6 +5,7 @@ import APIBase from './APIBase';
 const _ = require('lodash'),
       nodeFTP = require('ftp'),
       Readable = require('stream').Readable,
+      Writable = require('stream').Writable,
       async = require('async');
 
 export default class FTP extends APIBase {
@@ -68,43 +69,37 @@ export default class FTP extends APIBase {
 
   }
 
-  // writeFile (options: any, callback: any) {
+  writeFile (options: any, destPath: string, data: any) {
 
-  //   const me = this,
-  //         conn = new ftp(),
-  //         limit = 20;
+    const ftp = new nodeFTP(), 
+          deferred = this.deferred(), 
+          limit = 20;
+    options.attempts = 0;
 
-  //   options.attempts = 0;
+    ftp.on('ready', () => {
+      const writeStream = new Writable(destPath);
+      const readStream = new Readable();
+      readStream.push(data);
+      readStream.push(null);
 
-  //   conn.on('ready', () => {
-  //     // me.logger.debug('connected');
-  //     conn.sftp((err, sftp) => {
+      ftp.put(readStream, destPath, (err) => {
+        if (err) {
+          deferred.reject(err);
+        }
+        ftp.end();
+        deferred.resolve({});
+      });
+    }).on('error', (err) => {
+      console.log("error: ", err);
+      if (options.attempts > limit) {
+        deferred.reject(err);
+      }
+      options.attempts++;
+      ftp.connect(options);
+    });
 
-  //       const writeStream = sftp.createWriteStream(options.filepath);
-  //       const readStream = new Readable();
-  //       readStream.push(options.content);
-  //       readStream.push(null);
-
-  //       writeStream.on('close', () => {
-  //         // me.logger.info('Successfully uploaded file to FTPS server:', options.filepath);
-  //         conn.end();
-  //         return callback(null, options.filepath);
-  //       });
-
-  //       readStream.pipe(writeStream);
-  //     });
-
-  //   }).on('error', (err) => {
-  //     if (options.attempts > limit) {
-  //       return callback(err);
-  //     }
-  //     // me.logger.error('Error connecting to SFTP:', options.filepath);
-  //     options.attempts++;
-  //     conn.connect(options);
-  //   });
-
-  //   conn.connect(options);
-
-  // }
+    ftp.connect(options);
+    return deferred.promise;
+  }
 
 };
