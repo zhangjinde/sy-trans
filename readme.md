@@ -4,6 +4,20 @@
 sy-trans is being developed as a library (like other npm modules like node-symphony, symphony-db, and any other module that you 'require' during the development process.</br>
 Developers will be able to require sy-trans, and this will expose promise-based file transfer methods for the most common protocols (e.g. FTP, SFTP) to read directories, files, and write files.
 
+<h3>Table of Contents</h3>
+<ul>
+<li><a href="#getting-started">Getting Started</a></li>
+<li><a href="#sftp-methods">SFTP Methods</a>
+  <ul>
+    <li><a href="#sftp-read-directory">Read directory</a></li>
+    <li><a href="#sftp-read-file">Read file</a></li>
+    <li><a href="#sftp-write-file">Write file</a></li>
+    <li><a href="#sftp-multiple-filse">Multiple files</a></li>
+  </ul>
+</li>
+</ul>
+
+<a name="getting-started"></a>
 <h3>Getting Started</h3>
 Add sy-trans to your app's package.json in the 'dependencies' section.
 
@@ -34,6 +48,7 @@ const sftp = new Transfer.SFTP({});
 const ftp = new Transfer.FTP({});
 ```
 
+<a name="sftp-methods"></a>
 <h3>SFTP Methods</h3>
 
 Establish connection options. These will typically be stored as environment variables so that you're not explicity storing sensitive information in a repo.
