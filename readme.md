@@ -142,8 +142,10 @@ const files = [
   }
 ];
 
-async.each(files, sftp.writeFile.bind(sftp), (err, data) {
+async.each(files, (file) => { sftp.writeFile(options, file); }, finish);
+
+function finish (err, data) {
   if (err) throw err;
   return data;
-});
+}
 ```
