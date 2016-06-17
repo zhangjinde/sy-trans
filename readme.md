@@ -12,7 +12,7 @@ Developers will be able to require sy-trans, and this will expose promise-based 
     <li><a href="#sftp-read-directory">Read directory</a></li>
     <li><a href="#sftp-read-file">Read file</a></li>
     <li><a href="#sftp-write-file">Write file</a></li>
-    <li><a href="#sftp-multiple-filse">Multiple files</a></li>
+    <li><a href="#sftp-multiple-files">Multiple files</a></li>
   </ul>
 </li>
 </ul>
