@@ -71,6 +71,7 @@ const file = {
 }
 ```
 
+<a name="sftp-read-directory"></a>
 <h4>Read directory.</h4>
 
 Acquire a list of files in a directory (folder) on the sftp server.
@@ -83,6 +84,7 @@ sftp.readDir (options, directory)
   });
 ```
 
+<a name="sftp-read-file"></a>
 <h4>Read a file.</h4>
 
 Use the options and file objects as inputs. This will return your file object with the 'content' property filled in!
@@ -97,6 +99,7 @@ sftp.readFile (options, file)
   });
 ```
 
+<a name="sftp-write-file"></a>
 <h4>Write a file.</h4>
 
 Let's say you've converted a data object to a csv formatted string. This string will the the 'content' within your file object.
@@ -111,6 +114,7 @@ sftp.writeFile (options, file)
   });
 ```
 
+<a name="sftp-multiple-files"></a>
 <h4>Moving multiple files at once.</h4>
 
 Let's say you have an array of file objects you'd like to write to a directory. You can use popular async libraries like 'async' or 'q' to do this.
