@@ -11,8 +11,8 @@ export default class SFTP extends APIBase {
 
   logger: any;
 
-  constructor() {
-    super();
+  constructor(options: ApiOptions) {
+    super(options);
   }
 
   connect (options: any, callback: any) {
