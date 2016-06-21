@@ -11,8 +11,8 @@ export default class SFTP extends APIBase {
 
   logger: any;
 
-  constructor(options: ApiOptions) {
-    super(options);
+  constructor() {
+    super();
   }
 
   connect (options: any, callback: any) {
@@ -130,14 +130,12 @@ export default class SFTP extends APIBase {
     const conn = new ssh2(),
           deferred = this.deferred(),
           limit = 20;
-
     options.attempts = 0;
 
     conn.on('ready', () => {
 
       conn.sftp((err, sftp) => {
         if (err) deferred.reject(err);
-
         sftp.rename(fromPath, toPath, (err, response) => {
           if (err) {
             deferred.reject(err);
@@ -148,13 +146,14 @@ export default class SFTP extends APIBase {
       });
 
     }).on('error', (err) => {
+
       if (options.attempts > limit) {
         deferred.reject(err);
       }
       options.attempts++;
       conn.connect(options);
+      
     });
-
     conn.connect(options);
     return deferred.promise;
   }
