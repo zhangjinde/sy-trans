@@ -7,7 +7,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var APIBase_1 = require('./APIBase');
-var _ = require('lodash'), nodeFTP = require('ftp'), Readable = require('stream').Readable, async = require('async');
+var _ = require('lodash'), nodeFTP = require('ftp'), Readable = require('stream').Readable, Writable = require('stream').Writable, async = require('async');
 var FTP = (function (_super) {
     __extends(FTP, _super);
     function FTP(options) {
@@ -50,6 +50,32 @@ var FTP = (function (_super) {
                     deferred.reject(err);
                 });
             });
+        });
+        ftp.connect(options);
+        return deferred.promise;
+    };
+    FTP.prototype.writeFile = function (options, destPath, data) {
+        var ftp = new nodeFTP(), deferred = this.deferred(), limit = 20;
+        options.attempts = 0;
+        ftp.on('ready', function () {
+            var writeStream = new Writable(destPath);
+            var readStream = new Readable();
+            readStream.push(data);
+            readStream.push(null);
+            ftp.put(readStream, destPath, function (err) {
+                if (err) {
+                    deferred.reject(err);
+                }
+                ftp.end();
+                deferred.resolve({});
+            });
+        }).on('error', function (err) {
+            console.log("error: ", err);
+            if (options.attempts > limit) {
+                deferred.reject(err);
+            }
+            options.attempts++;
+            ftp.connect(options);
         });
         ftp.connect(options);
         return deferred.promise;

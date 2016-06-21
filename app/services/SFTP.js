@@ -10,8 +10,8 @@ var APIBase_1 = require('./APIBase');
 var _ = require('lodash'), ssh2 = require('ssh2'), Readable = require('stream').Readable, async = require('async');
 var SFTP = (function (_super) {
     __extends(SFTP, _super);
-    function SFTP(options) {
-        _super.call(this, options);
+    function SFTP() {
+        _super.call(this);
     }
     SFTP.prototype.connect = function (options, callback) {
         var me = this, conn = new ssh2();
