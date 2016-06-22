@@ -13,11 +13,12 @@ var FTP = (function (_super) {
     function FTP(options) {
         _super.call(this, options);
     }
-    FTP.prototype.readDir = function (options, path) {
+    FTP.prototype.readDir = function (options, file) {
+        options.user = options.username ? options.username : options.user;
         var deferred = this.deferred();
         var me = this, ftp = new nodeFTP();
         ftp.on('ready', function () {
-            ftp.list(path, function (err, list) {
+            ftp.list(file.path, function (err, list) {
                 if (err) {
                     // throw err;
                     deferred.reject(err);
@@ -31,11 +32,12 @@ var FTP = (function (_super) {
         ftp.connect(options);
         return deferred.promise;
     };
-    FTP.prototype.readFile = function (options, path) {
+    FTP.prototype.readFile = function (options, file) {
+        options.user = options.username ? options.username : options.user;
         var deferred = this.deferred();
         var ftp = new nodeFTP();
         ftp.on('ready', function () {
-            ftp.get(path, function (err, stream) {
+            ftp.get(file.path, function (err, stream) {
                 if (err) {
                     deferred.reject(err);
                 }
@@ -54,15 +56,16 @@ var FTP = (function (_super) {
         ftp.connect(options);
         return deferred.promise;
     };
-    FTP.prototype.writeFile = function (options, destPath, data) {
+    FTP.prototype.writeFile = function (options, file) {
+        options.user = options.username ? options.username : options.user;
         var ftp = new nodeFTP(), deferred = this.deferred(), limit = 20;
         options.attempts = 0;
         ftp.on('ready', function () {
-            var writeStream = new Writable(destPath);
+            var writeStream = new Writable(file.path);
             var readStream = new Readable();
-            readStream.push(data);
+            readStream.push(file.content);
             readStream.push(null);
-            ftp.put(readStream, destPath, function (err) {
+            ftp.put(readStream, file.path, function (err) {
                 if (err) {
                     deferred.reject(err);
                 }
@@ -70,7 +73,7 @@ var FTP = (function (_super) {
                 deferred.resolve({});
             });
         }).on('error', function (err) {
-            console.log("error: ", err);
+            // console.log("error: ", err);
             if (options.attempts > limit) {
                 deferred.reject(err);
             }
@@ -80,11 +83,40 @@ var FTP = (function (_super) {
         ftp.connect(options);
         return deferred.promise;
     };
-    FTP.prototype.moveFile = function (fromPath, toPath, options) {
+    // writeFile (options: any, destPath: string, data: any) {
+    //   const ftp = new nodeFTP(),
+    //         deferred = this.deferred(),
+    //         limit = 20;
+    //   options.attempts = 0;
+    //   ftp.on('ready', () => {
+    //     const writeStream = new Writable(destPath);
+    //     const readStream = new Readable();
+    //     readStream.push(data);
+    //     readStream.push(null);
+    //     ftp.put(readStream, destPath, (err) => {
+    //       if (err) {
+    //         deferred.reject(err);
+    //       }
+    //       ftp.end();
+    //       deferred.resolve({});
+    //     });
+    //   }).on('error', (err) => {
+    //     console.log("error: ", err);
+    //     if (options.attempts > limit) {
+    //       deferred.reject(err);
+    //     }
+    //     options.attempts++;
+    //     ftp.connect(options);
+    //   });
+    //   ftp.connect(options);
+    //   return deferred.promise;
+    // }
+    FTP.prototype.moveFile = function (options, file) {
+        options.user = options.username ? options.username : options.user;
         var ftp = new nodeFTP(), deferred = this.deferred(), limit = 20;
         options.attempts = 0;
         ftp.on('ready', function () {
-            ftp.rename(fromPath, toPath, function (err, data) {
+            ftp.rename(file.path, file.destPath, function (err, data) {
                 if (err) {
                     deferred.reject(err);
                 }
@@ -92,7 +124,7 @@ var FTP = (function (_super) {
                 deferred.resolve({});
             });
         }).on('error', function (err) {
-            console.log("error: ", err);
+            // console.log("error: ", err);
             if (options.attempts > limit) {
                 deferred.reject(err);
             }
