@@ -15,7 +15,14 @@ Developers will be able to require sy-trans, and this will expose promise-based 
     <li><a href="#sftp-multiple-files">Multiple files</a></li>
   </ul>
 </li>
-</ul>
+<li><a href="#ftp-methods">FTP Methods</a>
+  <ul>
+    <li><a href="#ftp-read-directory">Read directory</a></li>
+    <li><a href="#ftp-read-file">Read file</a></li>
+    <li><a href="#ftp-write-file">Write file</a></li>
+    <li><a href="#ftp-multiple-files">Multiple files</a></li>
+  </ul>
+</li></ul>
 
 <a name="getting-started"></a>
 <h3>Getting Started</h3>
@@ -148,4 +155,69 @@ function finish (err, data) {
   if (err) throw err;
   return data;
 }
+```
+<a name="ftp-methods"></a>
+<h3>FTP Methods</h3>
+
+Establish connection options. These will typically be stored as environment variables so that you're not explicity storing sensitive information in a repo.
+
+```
+const options = {
+  host: process.env.sftp_host,
+  port: process.env.sftp_port,
+  username: process.env.sftp_user,
+  password: process.env.sftp_password
+}
+```
+
+Compile individual file information (each ftp method takes in one file at a time.
+
+```
+const file = {
+  content: <This is a STRING. sy-trans currently supports transfering txt, csv, tsv, json, js, css.>
+  path: </directory/sub-directory/filename + extension>
+}
+```
+
+<a name="ftp-read-directory"></a>
+<h4>Read directory.</h4>
+
+Acquire a list of files in a directory (folder) on the sftp server.
+
+```
+ftp.readDir (options, path) 
+  .then((list) => {
+    console.log(list.length)
+    return list;
+  });
+```
+
+<a name="ftp-read-file"></a>
+<h4>Read a file.</h4>
+
+Use the options and file objects as inputs. This will return your file object with the 'content' property filled in!
+
+```
+ftp.readFile (options, path)
+  .then((file) => {
+    <file = {
+      content: <your new content>,
+      path: <the filepath from where this file was read>
+    }>
+  });
+```
+
+<a name="ftp-write-file"></a>
+<h4>Write a file.</h4>
+
+Let's say you've converted a data object to a tsv formatted string. This string will the the 'content' within your file object.
+
+```
+ftp.writeFile (options, path, data)
+  .then((file) => {
+    <file = {
+      content: <the content you wrote>,
+      path: <the filepath from where this file was read, with a .tsv extension in this case>
+    }>
+  });
 ```

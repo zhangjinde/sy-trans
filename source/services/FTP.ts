@@ -71,8 +71,8 @@ export default class FTP extends APIBase {
 
   writeFile (options: any, destPath: string, data: any) {
 
-    const ftp = new nodeFTP(), 
-          deferred = this.deferred(), 
+    const ftp = new nodeFTP(),
+          deferred = this.deferred(),
           limit = 20;
     options.attempts = 0;
 
@@ -83,6 +83,35 @@ export default class FTP extends APIBase {
       readStream.push(null);
 
       ftp.put(readStream, destPath, (err) => {
+        if (err) {
+          deferred.reject(err);
+        }
+        ftp.end();
+        deferred.resolve({});
+      });
+    }).on('error', (err) => {
+      console.log("error: ", err);
+      if (options.attempts > limit) {
+        deferred.reject(err);
+      }
+      options.attempts++;
+      ftp.connect(options);
+    });
+
+    ftp.connect(options);
+    return deferred.promise;
+  }
+
+  moveFile (fromPath: string, toPath: string, options: any) {
+
+    const ftp = new nodeFTP(),
+          deferred = this.deferred(),
+          limit = 20;
+    options.attempts = 0;
+
+    ftp.on('ready', () => {
+
+      ftp.rename(fromPath, toPath, (err, data) => {
         if (err) {
           deferred.reject(err);
         }
