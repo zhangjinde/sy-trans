@@ -16,13 +16,14 @@ export default class FTP extends APIBase {
     super(options);
   }
 
-  readDir(options: any, path: string) {
+  readDir(options: any, file: any) {
 
+    options.user = options.username ? options.username : options.user;
     const deferred = this.deferred();
     const me = this,
           ftp = new nodeFTP();
     ftp.on('ready', () => {
-      ftp.list(path, (err, list) => {
+      ftp.list(file.path, (err, list) => {
         if (err) {
           // throw err;
           deferred.reject(err);
@@ -40,14 +41,14 @@ export default class FTP extends APIBase {
     return deferred.promise;
   }
 
-  readFile(options: any, path: string) {
+  readFile(options: any, file: any) {
 
+    options.user = options.username ? options.username : options.user;
     const deferred = this.deferred();
-  
     const ftp = new nodeFTP();
 
     ftp.on('ready', () => {
-      ftp.get(path, (err, stream) => {
+      ftp.get(file.path, (err, stream) => {
         if (err) {
           deferred.reject(err);
         }
@@ -69,20 +70,21 @@ export default class FTP extends APIBase {
 
   }
 
-  writeFile (options: any, destPath: string, data: any) {
+  writeFile (options: any, file: any) {
 
+    options.user = options.username ? options.username : options.user;
     const ftp = new nodeFTP(),
           deferred = this.deferred(),
           limit = 20;
     options.attempts = 0;
 
     ftp.on('ready', () => {
-      const writeStream = new Writable(destPath);
+      const writeStream = new Writable(file.path);
       const readStream = new Readable();
-      readStream.push(data);
+      readStream.push(file.content);
       readStream.push(null);
 
-      ftp.put(readStream, destPath, (err) => {
+      ftp.put(readStream, file.path, (err) => {
         if (err) {
           deferred.reject(err);
         }
@@ -90,7 +92,7 @@ export default class FTP extends APIBase {
         deferred.resolve({});
       });
     }).on('error', (err) => {
-      console.log("error: ", err);
+      // console.log("error: ", err);
       if (options.attempts > limit) {
         deferred.reject(err);
       }
@@ -102,8 +104,42 @@ export default class FTP extends APIBase {
     return deferred.promise;
   }
 
-  moveFile (fromPath: string, toPath: string, options: any) {
+  // writeFile (options: any, destPath: string, data: any) {
 
+  //   const ftp = new nodeFTP(),
+  //         deferred = this.deferred(),
+  //         limit = 20;
+  //   options.attempts = 0;
+
+  //   ftp.on('ready', () => {
+  //     const writeStream = new Writable(destPath);
+  //     const readStream = new Readable();
+  //     readStream.push(data);
+  //     readStream.push(null);
+
+  //     ftp.put(readStream, destPath, (err) => {
+  //       if (err) {
+  //         deferred.reject(err);
+  //       }
+  //       ftp.end();
+  //       deferred.resolve({});
+  //     });
+  //   }).on('error', (err) => {
+  //     console.log("error: ", err);
+  //     if (options.attempts > limit) {
+  //       deferred.reject(err);
+  //     }
+  //     options.attempts++;
+  //     ftp.connect(options);
+  //   });
+
+  //   ftp.connect(options);
+  //   return deferred.promise;
+  // }
+
+  moveFile (options: any, file: any) {
+
+    options.user = options.username ? options.username : options.user;
     const ftp = new nodeFTP(),
           deferred = this.deferred(),
           limit = 20;
@@ -111,7 +147,7 @@ export default class FTP extends APIBase {
 
     ftp.on('ready', () => {
 
-      ftp.rename(fromPath, toPath, (err, data) => {
+      ftp.rename(file.path, file.destPath, (err, data) => {
         if (err) {
           deferred.reject(err);
         }
@@ -119,7 +155,7 @@ export default class FTP extends APIBase {
         deferred.resolve({});
       });
     }).on('error', (err) => {
-      console.log("error: ", err);
+      // console.log("error: ", err);
       if (options.attempts > limit) {
         deferred.reject(err);
       }
