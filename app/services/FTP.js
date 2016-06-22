@@ -13,12 +13,12 @@ var FTP = (function (_super) {
     function FTP(options) {
         _super.call(this, options);
     }
-    FTP.prototype.readDir = function (options, file) {
+    FTP.prototype.readDir = function (options, path) {
         options.user = options.username ? options.username : options.user;
         var deferred = this.deferred();
         var me = this, ftp = new nodeFTP();
         ftp.on('ready', function () {
-            ftp.list(file.path, function (err, list) {
+            ftp.list(path, function (err, list) {
                 if (err) {
                     // throw err;
                     deferred.reject(err);
@@ -111,12 +111,12 @@ var FTP = (function (_super) {
     //   ftp.connect(options);
     //   return deferred.promise;
     // }
-    FTP.prototype.moveFile = function (options, file) {
+    FTP.prototype.moveFile = function (options, fromPath, toPath) {
         options.user = options.username ? options.username : options.user;
         var ftp = new nodeFTP(), deferred = this.deferred(), limit = 20;
         options.attempts = 0;
         ftp.on('ready', function () {
-            ftp.rename(file.path, file.destPath, function (err, data) {
+            ftp.rename(fromPath, toPath, function (err, data) {
                 if (err) {
                     deferred.reject(err);
                 }

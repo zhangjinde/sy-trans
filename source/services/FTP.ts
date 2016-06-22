@@ -16,14 +16,14 @@ export default class FTP extends APIBase {
     super(options);
   }
 
-  readDir(options: any, file: any) {
+  readDir(options: any, path: string) {
 
     options.user = options.username ? options.username : options.user;
     const deferred = this.deferred();
     const me = this,
           ftp = new nodeFTP();
     ftp.on('ready', () => {
-      ftp.list(file.path, (err, list) => {
+      ftp.list(path, (err, list) => {
         if (err) {
           // throw err;
           deferred.reject(err);
@@ -137,7 +137,7 @@ export default class FTP extends APIBase {
   //   return deferred.promise;
   // }
 
-  moveFile (options: any, file: any) {
+  moveFile (options: any, fromPath: string, toPath: string) {
 
     options.user = options.username ? options.username : options.user;
     const ftp = new nodeFTP(),
@@ -147,7 +147,7 @@ export default class FTP extends APIBase {
 
     ftp.on('ready', () => {
 
-      ftp.rename(file.path, file.destPath, (err, data) => {
+      ftp.rename(fromPath, toPath, (err, data) => {
         if (err) {
           deferred.reject(err);
         }
