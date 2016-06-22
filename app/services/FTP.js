@@ -80,6 +80,28 @@ var FTP = (function (_super) {
         ftp.connect(options);
         return deferred.promise;
     };
+    FTP.prototype.moveFile = function (fromPath, toPath, options) {
+        var ftp = new nodeFTP(), deferred = this.deferred(), limit = 20;
+        options.attempts = 0;
+        ftp.on('ready', function () {
+            ftp.rename(fromPath, toPath, function (err, data) {
+                if (err) {
+                    deferred.reject(err);
+                }
+                ftp.end();
+                deferred.resolve({});
+            });
+        }).on('error', function (err) {
+            console.log("error: ", err);
+            if (options.attempts > limit) {
+                deferred.reject(err);
+            }
+            options.attempts++;
+            ftp.connect(options);
+        });
+        ftp.connect(options);
+        return deferred.promise;
+    };
     return FTP;
 }(APIBase_1["default"]));
 exports.__esModule = true;
