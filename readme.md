@@ -1,8 +1,8 @@
 <h1>sy-trans [Symphony Transfer]</h1>
 
 <h3>Description</h3>
-sy-trans is being developed as a library (like other npm modules like node-symphony, symphony-db, and any other module that you 'require' during the development process.</br>
-Developers will be able to require sy-trans, and this will expose promise-based file transfer methods for the most common protocols (e.g. FTP, SFTP) to read directories, files, and write files.
+sy-trans is being developed as a library (like other npm modules like node-symphony, symphony-db, and any other module that you 'require' during the development process).</br>
+Developers will be able to require sy-trans, and this will expose promise-based file transfer methods for the most common protocols (e.g. FTP, SFTP) to read directories, read files, and write files.
 
 <h3>Table of Contents</h3>
 <ul>
@@ -73,7 +73,7 @@ Compile individual file information (each sftp method takes in one file at a tim
 
 ```
 const file = {
-  content: <This is a STRING. sy-trans currently supports transfering txt, csv, tsv, json, js, css.>
+  content: <This is a STRING. sy-trans currently supports transfering txt, xml, csv, tsv, json, js [dangerous], and css.>
   path: </directory/sub-directory/filename + extension>
 }
 ```
@@ -84,7 +84,7 @@ const file = {
 Acquire a list of files in a directory (folder) on the sftp server.
 
 ```
-sftp.readDir (options, directory) 
+sftp.readDir (options: object, path: string) 
   .then((list) => {
     console.log(list.length)
     return list;
@@ -112,7 +112,7 @@ sftp.readFile (options, file)
 Let's say you've converted a data object to a csv formatted string. This string will the the 'content' within your file object.
 
 ```
-sftp.writeFile (options, file)
+sftp.writeFile (options: object, file: object)
   .then((file) => {
     <file = {
       content: <the content you wrote>,
@@ -185,7 +185,7 @@ const file = {
 Acquire a list of files in a directory (folder) on the sftp server.
 
 ```
-ftp.readDir (options, path) 
+ftp.readDir (options: object, path: string) 
   .then((list) => {
     console.log(list.length)
     return list;
@@ -198,7 +198,7 @@ ftp.readDir (options, path)
 Use the options and file objects as inputs. This will return your file object with the 'content' property filled in!
 
 ```
-ftp.readFile (options, file)
+ftp.readFile (options: object, file: object)
   .then((file) => {
     <file = {
       content: <your new content>,
@@ -213,7 +213,7 @@ ftp.readFile (options, file)
 Let's say you've converted a data object to a tsv formatted string. This string will the the 'content' within your file object.
 
 ```
-ftp.writeFile (options, file)
+ftp.writeFile (options: object, file: object)
   .then((file) => {
     <file = {
       content: <the content you wrote>,
@@ -228,7 +228,7 @@ ftp.writeFile (options, file)
 Move (and/or rename) a file within your FTP server.
 
 ```
-ftp.writeFile (options, fromPath, toPath)
+ftp.writeFile (options: object, fromPath: string, toPath: string)
   .then((file) => {
       // file moved to new location, new filename, or both
   });
