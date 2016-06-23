@@ -20,7 +20,7 @@ Developers will be able to require sy-trans, and this will expose promise-based 
     <li><a href="#ftp-read-directory">Read directory</a></li>
     <li><a href="#ftp-read-file">Read file</a></li>
     <li><a href="#ftp-write-file">Write file</a></li>
-    <li><a href="#ftp-multiple-files">Multiple files</a></li>
+    <li><a href="#ftp-move-file">Move a file</a></li>
   </ul>
 </li></ul>
 
@@ -198,7 +198,7 @@ ftp.readDir (options, path)
 Use the options and file objects as inputs. This will return your file object with the 'content' property filled in!
 
 ```
-ftp.readFile (options, path)
+ftp.readFile (options, file)
   .then((file) => {
     <file = {
       content: <your new content>,
@@ -213,7 +213,7 @@ ftp.readFile (options, path)
 Let's say you've converted a data object to a tsv formatted string. This string will the the 'content' within your file object.
 
 ```
-ftp.writeFile (options, path, data)
+ftp.writeFile (options, file)
   .then((file) => {
     <file = {
       content: <the content you wrote>,
@@ -221,3 +221,16 @@ ftp.writeFile (options, path, data)
     }>
   });
 ```
+
+<a name="ftp-move-file"></a>
+<h4>Move a file.</h4>
+
+Move (and/or rename) a file within your FTP server.
+
+```
+ftp.writeFile (options, fromPath, toPath)
+  .then((file) => {
+      // file moved to new location, new filename, or both
+  });
+```
+
