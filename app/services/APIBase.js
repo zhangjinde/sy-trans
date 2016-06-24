@@ -18,23 +18,6 @@ var APIBase = (function (_super) {
             "Accept": "application/json",
             "Content-Type": "application/json"
         };
-        this.baseUrl = "https://" + manageEnv + ".symphonycommerce.com";
-        if (apiOptions.basicAuth) {
-            this.headers["Authorization"] = apiOptions.basicAuth;
-            return;
-        }
-        if (apiOptions.email && apiOptions.password) {
-            this.headers["Authorization"] = "Basic " + btoa2(apiOptions.email + ":" + apiOptions.password);
-            return;
-        }
-        if (apiOptions.sessionId) {
-            this.headers["Cookie"] = "SPSESSIONID=" + apiOptions.sessionId;
-            return;
-        }
-        if (apiOptions.cookieAuth) {
-            this.headers["Cookie"] = apiOptions.cookieAuth;
-            return;
-        }
     }
     return APIBase;
 }(Service_Base_1["default"]));
