@@ -16,7 +16,7 @@ var SFTP = (function (_super) {
         var _this = this;
         var deferred = this.deferred();
         var conn = new ssh2();
-        var limit = 20;
+        var limit = 40;
         this.options.attempts = 0;
         conn.on('ready', function () { return deferred.resolve(conn); })
             .on('error', function (err) {
@@ -72,7 +72,7 @@ var SFTP = (function (_super) {
     };
     SFTP.prototype.writeFile = function (file) {
         var _this = this;
-        this.initSFTP().then(function (conn) {
+        return this.initSFTP().then(function (conn) {
             var deferred = _this.deferred();
             conn.sftp(function (err, sftp) {
                 var writeStream = sftp.createWriteStream(file.path);
@@ -90,7 +90,7 @@ var SFTP = (function (_super) {
     };
     SFTP.prototype.moveFile = function (fromPath, toPath) {
         var _this = this;
-        this.initSFTP().then(function (conn) {
+        return this.initSFTP().then(function (conn) {
             var deferred = _this.deferred();
             conn.sftp(function (err, sftp) {
                 if (err)
