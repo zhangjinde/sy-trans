@@ -5,4 +5,5 @@ node_modules
 *.zip
 aws.json
 dev-config.json
+build-tasks
 .arcconfig

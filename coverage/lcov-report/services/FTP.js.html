@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for services/FTP.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">services/</a> FTP.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">42.05% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>37/88</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">37.04% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>10/27</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">39.13% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>9/23</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">39.29% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>33/84</span>
+      </div>
+      <div class='fl pad1y'>
+        <span class="strong">10 statements, 2 functions, 5 branches</span>
+        <span class="quiet">Ignored</span>  &nbsp;&nbsp;&nbsp;&nbsp;
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">"use strict";
+var __extends = (this &amp;&amp; this.__extends) || function (d, b) {
+    for (var p in b) <span class="cstat-skip" title="statement not covered" >if (b.hasOwnProperty(p)) <span class="cstat-skip" title="statement not covered" >d[p] = b[p];</span></span>
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? <span class="branch-0 cbranch-skip" title="branch not covered" >Object.create(b) </span>: (__.prototype = b.prototype, new __());
+};
+var Service_Base_1 = require('./../bases/Service-Base');
+var _ = require('lodash'), nodeFTP = require('ftp'), Readable = require('stream').Readable, Writable = require('stream').Writable, async = require('async');
+var FTP = (function (_super) {
+    __extends(FTP, _super);
+    function FTP(options) {
+        _super.call(this);
+        this.options = options;
+    }
+    /* istanbul ignore next */
+    FTP.prototype.initFtp = <span class="fstat-skip" title="function not covered" >function () {</span>
+<span class="cstat-skip" title="statement not covered" >        var deferred = this.deferred();</span>
+<span class="cstat-skip" title="statement not covered" >        var ftp = new nodeFTP();</span>
+<span class="cstat-skip" title="statement not covered" >        this.options.user = this.options.username || this.options.user;</span>
+<span class="cstat-skip" title="statement not covered" >        ftp.on('ready', <span class="fstat-skip" title="function not covered" >function () {</span> <span class="cstat-skip" title="statement not covered" >return deferred.resolve(ftp); </span>});</span>
+<span class="cstat-skip" title="statement not covered" >        ftp.on('error', deferred.reject);</span>
+<span class="cstat-skip" title="statement not covered" >        ftp.connect(this.options);</span>
+<span class="cstat-skip" title="statement not covered" >        return deferred.promise;</span>
+    };
+    FTP.prototype.readDir = function (path) {
+        var _this = this;
+        return this.initFtp().then(function (ftp) {
+            var deferred = _this.deferred();
+            ftp.list(path, function (err, list) {
+                <span class="missing-if-branch" title="if path not taken" >I</span>if (err) {
+                    // throw err;
+<span class="cstat-no" title="statement not covered" >                    deferred.reject(err);</span>
+                }
+                deferred.resolve(list);
+            });
+            return deferred.promise;
+        });
+    };
+    FTP.prototype.readFile = <span class="fstat-no" title="function not covered" >function (options, file) {</span>
+<span class="cstat-no" title="statement not covered" >        var deferred = this.deferred();</span>
+<span class="cstat-no" title="statement not covered" >        var ftp = new nodeFTP();</span>
+<span class="cstat-no" title="statement not covered" >        options.user = options.username || options.user;</span>
+<span class="cstat-no" title="statement not covered" >        ftp.on('ready', <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >            ftp.get(file.path, <span class="fstat-no" title="function not covered" >function (err, stream) {</span></span>
+<span class="cstat-no" title="statement not covered" >                if (err) {</span>
+<span class="cstat-no" title="statement not covered" >                    deferred.reject(err);</span>
+                }
+<span class="cstat-no" title="statement not covered" >                var content = "";</span>
+<span class="cstat-no" title="statement not covered" >                stream.on('data', <span class="fstat-no" title="function not covered" >function (chunk) {</span></span>
+<span class="cstat-no" title="statement not covered" >                    content += chunk;</span>
+                }).on('end', <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >                    ftp.end();</span>
+<span class="cstat-no" title="statement not covered" >                    deferred.resolve(content);</span>
+                }).on('error', <span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >                    ftp.end();</span>
+<span class="cstat-no" title="statement not covered" >                    deferred.reject(err);</span>
+                });
+            });
+        });
+<span class="cstat-no" title="statement not covered" >        ftp.connect(options);</span>
+<span class="cstat-no" title="statement not covered" >        return deferred.promise;</span>
+    };
+    FTP.prototype.writeFile = <span class="fstat-no" title="function not covered" >function (options, file) {</span>
+<span class="cstat-no" title="statement not covered" >        var ftp = new nodeFTP(), deferred = this.deferred(), limit = 20;</span>
+<span class="cstat-no" title="statement not covered" >        options.attempts = 0;</span>
+<span class="cstat-no" title="statement not covered" >        options.user = options.username || options.user;</span>
+<span class="cstat-no" title="statement not covered" >        ftp.on('ready', <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >            var writeStream = new Writable(file.path);</span>
+<span class="cstat-no" title="statement not covered" >            var readStream = new Readable();</span>
+<span class="cstat-no" title="statement not covered" >            readStream.push(file.content);</span>
+<span class="cstat-no" title="statement not covered" >            readStream.push(null);</span>
+<span class="cstat-no" title="statement not covered" >            ftp.put(readStream, file.path, <span class="fstat-no" title="function not covered" >function (err) {</span></span>
+<span class="cstat-no" title="statement not covered" >                if (err) {</span>
+<span class="cstat-no" title="statement not covered" >                    deferred.reject(err);</span>
+                }
+<span class="cstat-no" title="statement not covered" >                ftp.end();</span>
+<span class="cstat-no" title="statement not covered" >                deferred.resolve({});</span>
+            });
+        }).on('error', <span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >            if (options.attempts &gt; limit) {</span>
+<span class="cstat-no" title="statement not covered" >                deferred.reject(err);</span>
+            }
+<span class="cstat-no" title="statement not covered" >            options.attempts++;</span>
+<span class="cstat-no" title="statement not covered" >            ftp.connect(options);</span>
+        });
+<span class="cstat-no" title="statement not covered" >        ftp.connect(options);</span>
+<span class="cstat-no" title="statement not covered" >        return deferred.promise;</span>
+    };
+    FTP.prototype.moveFile = <span class="fstat-no" title="function not covered" >function (options, fromPath, toPath) {</span>
+<span class="cstat-no" title="statement not covered" >        var ftp = new nodeFTP(), deferred = this.deferred(), limit = 20;</span>
+<span class="cstat-no" title="statement not covered" >        options.attempts = 0;</span>
+<span class="cstat-no" title="statement not covered" >        options.user = options.username || options.user;</span>
+<span class="cstat-no" title="statement not covered" >        ftp.on('ready', <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >            ftp.rename(fromPath, toPath, <span class="fstat-no" title="function not covered" >function (err, data) {</span></span>
+<span class="cstat-no" title="statement not covered" >                if (err) {</span>
+<span class="cstat-no" title="statement not covered" >                    deferred.reject(err);</span>
+                }
+<span class="cstat-no" title="statement not covered" >                ftp.end();</span>
+<span class="cstat-no" title="statement not covered" >                deferred.resolve({});</span>
+            });
+        }).on('error', <span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >            if (options.attempts &gt; limit) {</span>
+<span class="cstat-no" title="statement not covered" >                deferred.reject(err);</span>
+            }
+<span class="cstat-no" title="statement not covered" >            options.attempts++;</span>
+<span class="cstat-no" title="statement not covered" >            ftp.connect(options);</span>
+        });
+<span class="cstat-no" title="statement not covered" >        ftp.connect(options);</span>
+<span class="cstat-no" title="statement not covered" >        return deferred.promise;</span>
+    };
+    return FTP;
+}(Service_Base_1.default));
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = FTP;
+;
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Jun 27 2016 16:55:36 GMT-0700 (PDT)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

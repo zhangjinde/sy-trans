@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for services/SFTP.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">services/</a> SFTP.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">22.22% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>20/90</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">33.33% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>7/21</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">11.11% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>3/27</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">19.54% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>17/87</span>
+      </div>
+      <div class='fl pad1y'>
+        <span class="strong">2 statements, 3 branches</span>
+        <span class="quiet">Ignored</span>  &nbsp;&nbsp;&nbsp;&nbsp;
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">"use strict";
+var __extends = (this &amp;&amp; this.__extends) || function (d, b) {
+    for (var p in b) <span class="cstat-skip" title="statement not covered" >if (b.hasOwnProperty(p)) <span class="cstat-skip" title="statement not covered" >d[p] = b[p];</span></span>
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? <span class="branch-0 cbranch-skip" title="branch not covered" >Object.create(b) </span>: (__.prototype = b.prototype, new __());
+};
+var Service_Base_1 = require('./../bases/Service-Base');
+var _ = require('lodash'), ssh2 = require('ssh2'), Readable = require('stream').Readable, async = require('async');
+var SFTP = (function (_super) {
+    __extends(SFTP, _super);
+<span class="fstat-no" title="function not covered" >    function SFTP(options) {</span>
+<span class="cstat-no" title="statement not covered" >        _super.call(this);</span>
+<span class="cstat-no" title="statement not covered" >        this.options = options;</span>
+    }
+    SFTP.prototype.connect = <span class="fstat-no" title="function not covered" >function (options, callback) {</span>
+<span class="cstat-no" title="statement not covered" >        var me = this, conn = new ssh2();</span>
+<span class="cstat-no" title="statement not covered" >        conn.on('ready', <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >            conn.sftp(<span class="fstat-no" title="function not covered" >function (err, sftp) {</span></span>
+<span class="cstat-no" title="statement not covered" >                callback(err, sftp);</span>
+            });
+        });
+<span class="cstat-no" title="statement not covered" >        conn.connect(options);</span>
+    };
+    SFTP.prototype.readDir = <span class="fstat-no" title="function not covered" >function (options, file) {</span>
+<span class="cstat-no" title="statement not covered" >        var conn = new ssh2(), deferred = this.deferred();</span>
+<span class="cstat-no" title="statement not covered" >        conn.connect(<span class="fstat-no" title="function not covered" >function (err, sftp) {</span></span>
+<span class="cstat-no" title="statement not covered" >            if (err)</span>
+<span class="cstat-no" title="statement not covered" >                deferred.reject(err);</span>
+<span class="cstat-no" title="statement not covered" >            sftp.readdir(file.path, <span class="fstat-no" title="function not covered" >function (err, list) {</span></span>
+<span class="cstat-no" title="statement not covered" >                if (err)</span>
+<span class="cstat-no" title="statement not covered" >                    deferred.reject(err);</span>
+<span class="cstat-no" title="statement not covered" >                sftp.end();</span>
+<span class="cstat-no" title="statement not covered" >                deferred.resolve(list);</span>
+            });
+        });
+<span class="cstat-no" title="statement not covered" >        return deferred.promise;</span>
+    };
+    SFTP.prototype.readFile = <span class="fstat-no" title="function not covered" >function (options, file) {</span>
+<span class="cstat-no" title="statement not covered" >        var conn = new ssh2(), deferred = this.deferred(), limit = 20;</span>
+<span class="cstat-no" title="statement not covered" >        options.attempts = 0;</span>
+<span class="cstat-no" title="statement not covered" >        conn.on('ready', <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >            conn.sftp(<span class="fstat-no" title="function not covered" >function (err, sftp) {</span></span>
+<span class="cstat-no" title="statement not covered" >                var stream = sftp.createReadStream(file.path);</span>
+<span class="cstat-no" title="statement not covered" >                var content = "";</span>
+<span class="cstat-no" title="statement not covered" >                stream.on('data', <span class="fstat-no" title="function not covered" >function (chunk) {</span></span>
+<span class="cstat-no" title="statement not covered" >                    content += chunk;</span>
+                }).on('end', <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >                    conn.end();</span>
+<span class="cstat-no" title="statement not covered" >                    deferred.resolve(content);</span>
+                }).on('error', <span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >                    sftp.end();</span>
+<span class="cstat-no" title="statement not covered" >                    deferred.reject(err);</span>
+                });
+            });
+        }).on('error', <span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >            if (options.attempts &gt; limit) {</span>
+<span class="cstat-no" title="statement not covered" >                deferred.reject(err);</span>
+            }
+<span class="cstat-no" title="statement not covered" >            options.attempts++;</span>
+<span class="cstat-no" title="statement not covered" >            conn.connect(options);</span>
+        });
+<span class="cstat-no" title="statement not covered" >        conn.connect(options);</span>
+<span class="cstat-no" title="statement not covered" >        return deferred.promise;</span>
+    };
+    SFTP.prototype.writeFile = <span class="fstat-no" title="function not covered" >function (options, file) {</span>
+<span class="cstat-no" title="statement not covered" >        var conn = new ssh2(), deferred = this.deferred(), limit = 20;</span>
+<span class="cstat-no" title="statement not covered" >        options.attempts = 0;</span>
+<span class="cstat-no" title="statement not covered" >        conn.on('ready', <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >            conn.sftp(<span class="fstat-no" title="function not covered" >function (err, sftp) {</span></span>
+<span class="cstat-no" title="statement not covered" >                var writeStream = sftp.createWriteStream(file.path);</span>
+<span class="cstat-no" title="statement not covered" >                var readStream = new Readable();</span>
+<span class="cstat-no" title="statement not covered" >                readStream.push(file.content);</span>
+<span class="cstat-no" title="statement not covered" >                readStream.push(null);</span>
+<span class="cstat-no" title="statement not covered" >                writeStream.on('close', <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                    conn.end();</span>
+<span class="cstat-no" title="statement not covered" >                    deferred.resolve(file.path);</span>
+                });
+<span class="cstat-no" title="statement not covered" >                readStream.pipe(writeStream);</span>
+            });
+        }).on('error', <span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >            if (options.attempts &gt; limit) {</span>
+<span class="cstat-no" title="statement not covered" >                deferred.reject(err);</span>
+            }
+<span class="cstat-no" title="statement not covered" >            options.attempts++;</span>
+<span class="cstat-no" title="statement not covered" >            conn.connect(options);</span>
+        });
+<span class="cstat-no" title="statement not covered" >        conn.connect(options);</span>
+<span class="cstat-no" title="statement not covered" >        return deferred.promise;</span>
+    };
+    SFTP.prototype.moveFile = <span class="fstat-no" title="function not covered" >function (fromPath, toPath, options) {</span>
+<span class="cstat-no" title="statement not covered" >        var conn = new ssh2(), deferred = this.deferred(), limit = 20;</span>
+<span class="cstat-no" title="statement not covered" >        options.attempts = 0;</span>
+<span class="cstat-no" title="statement not covered" >        conn.on('ready', <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >            conn.sftp(<span class="fstat-no" title="function not covered" >function (err, sftp) {</span></span>
+<span class="cstat-no" title="statement not covered" >                if (err)</span>
+<span class="cstat-no" title="statement not covered" >                    deferred.reject(err);</span>
+<span class="cstat-no" title="statement not covered" >                sftp.rename(fromPath, toPath, <span class="fstat-no" title="function not covered" >function (err, response) {</span></span>
+<span class="cstat-no" title="statement not covered" >                    if (err) {</span>
+<span class="cstat-no" title="statement not covered" >                        deferred.reject(err);</span>
+                    }
+<span class="cstat-no" title="statement not covered" >                    sftp.end();</span>
+<span class="cstat-no" title="statement not covered" >                    deferred.resolve(response);</span>
+                });
+            });
+        }).on('error', <span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >            if (options.attempts &gt; limit) {</span>
+<span class="cstat-no" title="statement not covered" >                deferred.reject(err);</span>
+            }
+<span class="cstat-no" title="statement not covered" >            options.attempts++;</span>
+<span class="cstat-no" title="statement not covered" >            conn.connect(options);</span>
+        });
+<span class="cstat-no" title="statement not covered" >        conn.connect(options);</span>
+<span class="cstat-no" title="statement not covered" >        return deferred.promise;</span>
+    };
+    return SFTP;
+}(Service_Base_1.default));
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = SFTP;
+;
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Jun 27 2016 16:55:36 GMT-0700 (PDT)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

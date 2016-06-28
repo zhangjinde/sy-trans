@@ -2,9 +2,9 @@
     "SYMPHONY_EMAIL": "test@test.com",
     "SYMPHONY_PASSWORD": "test",
     "SITE": "kittyprod",
-    "SFTP_HOST": "test-sftp.symphonycommerce.com",
-    "SFTP_USER": "jacklinks",
-    "SFTP_PASSWORD": "feedmetacos",
+    "SFTP_HOST": "sftp-orders.symphonycommerce.com",
+    "SFTP_USER": "dm",
+    "SFTP_PASSWORD": "\"C=\"h{x_$<-}DO5nJv2Ri'uf`",
     "FTP_HOST": "test-sftp.symphonycommerce.com",
     "FTP_USER": "bendon",
     "FTP_PASSWORD": "feedmetacos"

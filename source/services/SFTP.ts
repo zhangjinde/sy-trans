@@ -1,161 +1,117 @@
-///<reference path='APIBase.ts'/>
-///<reference path='../interfaces/ApiOptions.ts'/>
+import ServiceBase from './../bases/Service-Base';
 
-import APIBase from './APIBase';
 const _ = require('lodash'),
       ssh2 = require('ssh2'),
       Readable = require('stream').Readable,
       async = require('async');
 
-export default class SFTP extends APIBase {
+export default class SFTP extends ServiceBase {
+    constructor(private options) {
+        super();
+    }
 
-  logger: any;
+    initSFTP () {
+        const deferred = this.deferred();
+        const conn = new ssh2();
+        const limit = 20;
 
-  constructor(options: ApiOptions) {
-    super(options);
-  }
+        this.options.attempts = 0;
+        conn.on('ready', () => deferred.resolve(conn))
+            .on('error', (err) => {
+                if (this.options.attempts > limit) {
+                    deferred.reject(err);
+                }
+                this.options.attempts++;
+                conn.connect(this.options);
+            });
 
-  connect (options: any, callback: any) {
+        conn.connect(this.options);
+        return deferred.promise;
+    }
 
-    const me = this,
-          conn = new ssh2();
+    readDir (path: string) { 
+        return this.initSFTP().then((conn) => {
+            const deferred = this.deferred();
+            conn.sftp((err, sftp) => {
+                if (err) deferred.reject(err);
 
-    conn.on('ready', () => {
-      conn.sftp((err, sftp) => {
-        callback(err, sftp);
-      });
-    });
+                sftp.readdir(path, (err, list) => {
+                    if (err) deferred.reject(err);
 
-    conn.connect(options);
+                    sftp.end();
+                    deferred.resolve(list);
+                });
+            });
 
-  }
-
-  readDir (options: any, file: any) {
-
-    const conn = new ssh2(),
-          deferred = this.deferred();
-
-    conn.connect((err, sftp) => {
-      if (err) deferred.reject(err);
-
-      sftp.readdir(file.path, (err, list) => {
-        if (err) deferred.reject(err);
-
-        sftp.end();
-        deferred.resolve(list);
-      });
-    });
-
-    return deferred.promise;
-  }
-
-  readFile (options: any, file: any) {
-
-    const conn = new ssh2(),
-          deferred = this.deferred(),
-          limit = 20;
-
-    options.attempts = 0;
-
-    conn.on('ready', () => {
-
-      conn.sftp((err, sftp) => {
-        const stream = sftp.createReadStream(file.path);
-
-        let content = "";
-
-        stream.on('data', (chunk) => {
-          content += chunk;
-        }).on('end', () => {
-          conn.end();
-          deferred.resolve(content);
-        }).on('error', (err) => {
-          sftp.end();
-          deferred.reject(err);
+            return deferred.promise;
         });
+    }
 
-      });
+    readFile (file: any) {
+        return this.initSFTP().then((conn) => {
+            const deferred = this.deferred();
+            conn.sftp((err, sftp) => {
+                if (err) deferred.reject(err);
 
-    }).on('error', (err) => {
-      if (options.attempts > limit) {
-        deferred.reject(err);
-      }
+                const stream = sftp.createReadStream(file.path);
 
-      options.attempts++;
-      conn.connect(options);
-    });
+                let content = "";
 
-    conn.connect(options);
-    return deferred.promise;
-  }
+                stream.on('data', (chunk) => {
+                    content += chunk;
+                })
+                .on('end', () => {
+                    conn.end();
+                    deferred.resolve(content);
+                })
+                .on('error', (err) => {
+                    sftp.end();
+                    deferred.reject(err);
+                });
+            });
 
-  writeFile (options: any, file: any) {
-
-    const conn = new ssh2(),
-          deferred = this.deferred(),
-          limit = 20;
-
-    options.attempts = 0;
-
-    conn.on('ready', () => {
-      conn.sftp((err, sftp) => {
-
-        const writeStream = sftp.createWriteStream(file.path);
-        const readStream = new Readable();
-        readStream.push(file.content);
-        readStream.push(null);
-
-        writeStream.on('close', () => {
-          conn.end();
-          deferred.resolve(file.path);
+            return deferred.promise;
         });
+    }
 
-        readStream.pipe(writeStream);
-      });
+    writeFile (file: any) {
 
-    }).on('error', (err) => {
-      if (options.attempts > limit) {
-        deferred.reject(err);
-      }
-      options.attempts++;
-      conn.connect(options);
-    });
+        this.initSFTP().then((conn) => {
+            const deferred = this.deferred();
+            conn.sftp((err, sftp) => {
 
-    conn.connect(options);
-    return deferred.promise;
-  }
+                const writeStream = sftp.createWriteStream(file.path);
+                const readStream = new Readable();
+                readStream.push(file.content);
+                readStream.push(null);
 
-  moveFile (fromPath: string, toPath: string, options: any) {
+                writeStream.on('close', () => {
+                    conn.end();
+                    deferred.resolve(file);
+                });
 
-    const conn = new ssh2(),
-          deferred = this.deferred(),
-          limit = 20;
-    options.attempts = 0;
+                readStream.pipe(writeStream);
+            });
 
-    conn.on('ready', () => {
-
-      conn.sftp((err, sftp) => {
-        if (err) deferred.reject(err);
-        sftp.rename(fromPath, toPath, (err, response) => {
-          if (err) {
-            deferred.reject(err);
-          }
-          sftp.end();
-          deferred.resolve(response);
+            return deferred.promise;
         });
-      });
+    }
 
-    }).on('error', (err) => {
+    moveFile (fromPath: string, toPath: string) {
+        this.initSFTP().then((conn) => {
+            const deferred = this.deferred();
+            conn.sftp((err, sftp) => {
+                if (err) deferred.reject(err);
 
-      if (options.attempts > limit) {
-        deferred.reject(err);
-      }
-      options.attempts++;
-      conn.connect(options);
-      
-    });
-    conn.connect(options);
-    return deferred.promise;
-  }
+                sftp.rename(fromPath, toPath, (err, data) => {
+                    if (err) deferred.reject(err);
 
+                    sftp.end();
+                    deferred.resolve(data);
+                });
+            });
+
+            return deferred.promise;
+        });
+    }
 };

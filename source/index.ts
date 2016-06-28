@@ -1,22 +1,15 @@
-const _ = require('lodash');
-const bulkRequire = require("bulk-require");
+import FTP from './services/FTP';
+import SFTP from './services/SFTP';
 
 module.exports = initModule;
 export default initModule;
 
-function initModule(apiOptions: any = {}) {
-  const apiClasses = bulkRequire(`${__dirname}/services`, [
-    "SFTP.js", "FTP.js"
-  ]);
+function initModule(options: any) {
 
-  _.each(apiClasses, (apiClass, apiName) => {
-    if (_.isEmpty(apiOptions)) {
-      apiClasses[apiName] = apiClass.default;
-      return;
-    }
+  const ftp = new FTP(options);
+  const sftp = new SFTP(options);
 
-    apiClasses[apiName] = new apiClass.default(_.clone(apiOptions, true));
-  });
-
-  return apiClasses;
+  return {
+    ftp, sftp
+  }
 }

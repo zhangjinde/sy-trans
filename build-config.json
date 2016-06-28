@@ -1,0 +1,12 @@
+{
+ "tasks": {
+   "dev": ["dev-nodeapp:_sequence"],
+   "test": ["dev-nodeapp:_test_sequence"]
+ },
+ "taskGroups": {
+   "dev-nodeapp": {
+       "devEnabled": true,
+       "deployEnabled":true
+   }
+ }
+}

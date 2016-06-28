@@ -17,6 +17,9 @@
     "is-json": "^1.2.5",
     "lodash": "^3.10.1",
     "request-promise": "^1.0.2",
+    "s-build": "symphony-integrations/s-build",
+    "sinon": "^1.17.4",
+    "sinon-chai": "^2.8.0",
     "ssh2": "^0.5.0",
     "stream": "0.0.2"
   },
@@ -25,7 +28,8 @@
     "url": "symphony-integrations/sy-trans"
   },
   "scripts": {
-    "test": "gulp test"
+    "test": "./node_modules/.bin/gulp test",
+    "postinstall": "./node_modules/.bin/gulp install-packages"
   },
   "author": "",
   "license": "ISC"

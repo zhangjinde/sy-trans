@@ -1,20 +1,13 @@
 "use strict";
-var _ = require('lodash');
-var bulkRequire = require("bulk-require");
+var FTP_1 = require('./services/FTP');
+var SFTP_1 = require('./services/SFTP');
 module.exports = initModule;
 exports.__esModule = true;
 exports["default"] = initModule;
-function initModule(apiOptions) {
-    if (apiOptions === void 0) { apiOptions = {}; }
-    var apiClasses = bulkRequire(__dirname + "/services", [
-        "SFTP.js", "FTP.js"
-    ]);
-    _.each(apiClasses, function (apiClass, apiName) {
-        if (_.isEmpty(apiOptions)) {
-            apiClasses[apiName] = apiClass.default;
-            return;
-        }
-        apiClasses[apiName] = new apiClass.default(_.clone(apiOptions, true));
-    });
-    return apiClasses;
+function initModule(options) {
+    var ftp = new FTP_1["default"](options);
+    var sftp = new SFTP_1["default"](options);
+    return {
+        ftp: ftp, sftp: sftp
+    };
 }

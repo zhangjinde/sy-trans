@@ -1,7 +1,5 @@
 ///<reference path="../../typings/es6-promise/es6-promise.d.ts"/>
 
-const fs = require('fs');
-
 export default class ServiceBase {
   services: any;
 
@@ -22,19 +20,5 @@ export default class ServiceBase {
     });
 
     return d;
-  }
-
-  readFile(file, options = {}) {
-    const deferred = this.deferred();
-    const thisFile = typeof file === 'object' ? file.file : file;
-    fs.readFile(`${__dirname}/${thisFile}`, options["encoding"] || 'utf8', (err, data) => {
-      if (err) {
-        return deferred.reject(err);
-      }
-
-      deferred.resolve(data);
-    });
-
-    return deferred.promise;
   }
 }
