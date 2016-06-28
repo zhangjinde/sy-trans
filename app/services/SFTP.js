@@ -12,18 +12,18 @@ var SFTP = (function (_super) {
         _super.call(this);
         this.options = options;
     }
-    SFTP.prototype.initSFTP = function () {
+    SFTP.prototype.initSFTP = function (file) {
         var _this = this;
         var deferred = this.deferred();
         var conn = new ssh2();
         var limit = 40;
-        this.options.attempts = 0;
+        file.attempts = 0;
         conn.on('ready', function () { return deferred.resolve(conn); })
             .on('error', function (err) {
-            if (_this.options.attempts > limit) {
+            if (file.attempts > limit) {
                 deferred.reject(err);
             }
-            _this.options.attempts++;
+            file.attempts++;
             conn.connect(_this.options);
         });
         conn.connect(this.options);
@@ -31,7 +31,8 @@ var SFTP = (function (_super) {
     };
     SFTP.prototype.readDir = function (path) {
         var _this = this;
-        return this.initSFTP().then(function (conn) {
+        var file = { path: path };
+        return this.initSFTP(file).then(function (conn) {
             var deferred = _this.deferred();
             conn.sftp(function (err, sftp) {
                 if (err)
@@ -48,7 +49,7 @@ var SFTP = (function (_super) {
     };
     SFTP.prototype.readFile = function (file) {
         var _this = this;
-        return this.initSFTP().then(function (conn) {
+        return this.initSFTP(file).then(function (conn) {
             var deferred = _this.deferred();
             conn.sftp(function (err, sftp) {
                 if (err)
@@ -72,7 +73,7 @@ var SFTP = (function (_super) {
     };
     SFTP.prototype.writeFile = function (file) {
         var _this = this;
-        return this.initSFTP().then(function (conn) {
+        return this.initSFTP(file).then(function (conn) {
             var deferred = _this.deferred();
             conn.sftp(function (err, sftp) {
                 var writeStream = sftp.createWriteStream(file.path);
@@ -90,7 +91,8 @@ var SFTP = (function (_super) {
     };
     SFTP.prototype.moveFile = function (fromPath, toPath) {
         var _this = this;
-        return this.initSFTP().then(function (conn) {
+        var file = { fromPath: fromPath, toPath: toPath };
+        return this.initSFTP(file).then(function (conn) {
             var deferred = _this.deferred();
             conn.sftp(function (err, sftp) {
                 if (err)

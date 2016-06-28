@@ -10,18 +10,18 @@ export default class SFTP extends ServiceBase {
         super();
     }
 
-    initSFTP () {
+    initSFTP (file: any) {
         const deferred = this.deferred();
         const conn = new ssh2();
         const limit = 40;
 
-        this.options.attempts = 0;
+        file.attempts = 0;
         conn.on('ready', () => deferred.resolve(conn))
             .on('error', (err) => {
-                if (this.options.attempts > limit) {
+                if (file.attempts > limit) {
                     deferred.reject(err);
                 }
-                this.options.attempts++;
+                file.attempts++;
                 conn.connect(this.options);
             });
 
@@ -30,7 +30,8 @@ export default class SFTP extends ServiceBase {
     }
 
     readDir (path: string) { 
-        return this.initSFTP().then((conn) => {
+        const file = { path };
+        return this.initSFTP(file).then((conn) => {
             const deferred = this.deferred();
             conn.sftp((err, sftp) => {
                 if (err) deferred.reject(err);
@@ -48,7 +49,7 @@ export default class SFTP extends ServiceBase {
     }
 
     readFile (file: any) {
-        return this.initSFTP().then((conn) => {
+        return this.initSFTP(file).then((conn) => {
             const deferred = this.deferred();
             conn.sftp((err, sftp) => {
                 if (err) deferred.reject(err);
@@ -75,8 +76,7 @@ export default class SFTP extends ServiceBase {
     }
 
     writeFile (file: any) {
-
-        return this.initSFTP().then((conn) => {
+        return this.initSFTP(file).then((conn) => {
             const deferred = this.deferred();
             conn.sftp((err, sftp) => {
 
@@ -98,7 +98,8 @@ export default class SFTP extends ServiceBase {
     }
 
     moveFile (fromPath: string, toPath: string) {
-        return this.initSFTP().then((conn) => {
+        const file = { fromPath, toPath };
+        return this.initSFTP(file).then((conn) => {
             const deferred = this.deferred();
             conn.sftp((err, sftp) => {
                 if (err) deferred.reject(err);
