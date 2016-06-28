@@ -28,8 +28,7 @@
     "url": "symphony-integrations/sy-trans"
   },
   "scripts": {
-    "test": "./node_modules/.bin/gulp test",
-    "postinstall": "./node_modules/.bin/gulp install-packages"
+    "test": "./node_modules/.bin/gulp test"
   },
   "author": "",
   "license": "ISC"
