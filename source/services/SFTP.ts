@@ -1,9 +1,8 @@
 import ServiceBase from './../bases/Service-Base';
 
-const _ = require('lodash'),
-      ssh2 = require('ssh2'),
-      Readable = require('stream').Readable,
-      async = require('async');
+const _ = require('lodash');
+const ssh2 = require('ssh2');
+const Readable = require('stream').Readable;
 
 export default class SFTP extends ServiceBase {
     constructor(private options) {
@@ -98,7 +97,7 @@ export default class SFTP extends ServiceBase {
     }
 
     moveFile (fromPath: string, toPath: string) {
-        const file = { fromPath, toPath };
+        const file = { fromPath, toPath, attempts: 0 };
         return this.initSFTP(file).then((conn) => {
             const deferred = this.deferred();
             conn.sftp((err, sftp) => {
@@ -108,7 +107,7 @@ export default class SFTP extends ServiceBase {
                     if (err) deferred.reject(err);
 
                     sftp.end();
-                    deferred.resolve(data);
+                    deferred.resolve(file);
                 });
             });
 
