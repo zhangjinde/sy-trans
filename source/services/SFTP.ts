@@ -23,7 +23,6 @@ export default class SFTP extends ServiceBase {
                 file.attempts++;
                 conn.connect(this.options);
             });
-
         conn.connect(this.options);
         return deferred.promise;
     }
