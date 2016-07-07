@@ -88,7 +88,7 @@ export default class FTP extends ServiceBase {
 
     moveFile (fromPath: string, toPath: string) {
         const file = { fromPath, toPath, attempts: 0 };
-        return this.initFTP().then((ftp) => {
+        return this.initFTP(file).then((ftp) => {
             const deferred = this.deferred();
             ftp.rename(fromPath, toPath, (err, data) => {
                 if (err) {
