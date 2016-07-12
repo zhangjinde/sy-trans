@@ -10,10 +10,11 @@ export default class FTP extends ServiceBase {
     }
 
     /* istanbul ignore next */
-    initFTP() {
+    initFTP(file: any) {
         const deferred = this.deferred();
         const ftp = new nodeFTP();
         const limit = 40;
+        file.attempts = 0;
 
         this.options.user = this.options.username || this.options.user;
         ftp.on('ready', () => deferred.resolve(ftp));
@@ -87,8 +88,8 @@ export default class FTP extends ServiceBase {
     }
 
     moveFile (fromPath: string, toPath: string) {
-        const file = { fromPath, toPath, attempts: 0 };
-        return this.initFTP().then((ftp) => {
+        const file = { fromPath, toPath };
+        return this.initFTP(file).then((ftp) => {
             const deferred = this.deferred();
             ftp.rename(fromPath, toPath, (err, data) => {
                 if (err) {
