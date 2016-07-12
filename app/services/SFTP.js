@@ -1,3 +1,5 @@
+///<reference path="../../typings/node/node.d.ts"/>
+///<reference path="../../typings/es6-promise/es6-promise.d.ts"/>
 "use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -5,7 +7,9 @@ var __extends = (this && this.__extends) || function (d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var Service_Base_1 = require('./../bases/Service-Base');
-var _ = require('lodash'), ssh2 = require('ssh2'), Readable = require('stream').Readable, async = require('async');
+var _ = require('lodash');
+var ssh2 = require('ssh2');
+var Readable = require('stream').Readable;
 var SFTP = (function (_super) {
     __extends(SFTP, _super);
     function SFTP(options) {
@@ -91,7 +95,7 @@ var SFTP = (function (_super) {
     };
     SFTP.prototype.moveFile = function (fromPath, toPath) {
         var _this = this;
-        var file = { fromPath: fromPath, toPath: toPath };
+        var file = { fromPath: fromPath, toPath: toPath, attempts: 0 };
         return this.initSFTP(file).then(function (conn) {
             var deferred = _this.deferred();
             conn.sftp(function (err, sftp) {
@@ -101,7 +105,7 @@ var SFTP = (function (_super) {
                     if (err)
                         deferred.reject(err);
                     sftp.end();
-                    deferred.resolve(data);
+                    deferred.resolve(file);
                 });
             });
             return deferred.promise;

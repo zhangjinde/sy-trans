@@ -1,3 +1,6 @@
+///<reference path="../../typings/node/node.d.ts"/>
+///<reference path="../../typings/es6-promise/es6-promise.d.ts"/>
+
 import ServiceBase from './../bases/Service-Base';
 
 const _ = require('lodash');
