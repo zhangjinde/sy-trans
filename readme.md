@@ -45,14 +45,14 @@ npm update sy-trans
 Require sy-trans in your script.
 
 ```
-const Transfer = require('sy-trans')();
+const transfer = require('sy-trans');
 ```
 
 Accessing protocol methods
 
 ```
-const sftp = new Transfer.SFTP({});
-const ftp = new Transfer.FTP({});
+const sftp = transfer(connection_options).sftp;
+const ftp = transfer(connection_options).ftp;
 ```
 
 <a name="sftp-methods"></a>
@@ -84,7 +84,7 @@ const file = {
 Acquire a list of files in a directory (folder) on the sftp server.
 
 ```
-sftp.readDir (options: object, path: string) 
+sftp.readDir (path: string) 
   .then((list) => {
     console.log(list.length)
     return list;
@@ -97,7 +97,7 @@ sftp.readDir (options: object, path: string)
 Use the options and file objects as inputs. This will return your file object with the 'content' property filled in!
 
 ```
-sftp.readFile (options, file)
+sftp.readFile (file)
   .then((file) => {
     <file = {
       content: <your new content>,
@@ -112,7 +112,7 @@ sftp.readFile (options, file)
 Let's say you've converted a data object to a csv formatted string. This string will the the 'content' within your file object.
 
 ```
-sftp.writeFile (options: object, file: object)
+sftp.writeFile (file: object)
   .then((file) => {
     <file = {
       content: <the content you wrote>,
@@ -149,7 +149,7 @@ const files = [
   }
 ];
 
-async.each(files, (file) => { sftp.writeFile(options, file); }, finish);
+async.each(files, sftp.writeFile.bind(sftp), finish);
 
 function finish (err, data) {
   if (err) throw err;
@@ -185,7 +185,7 @@ const file = {
 Acquire a list of files in a directory (folder) on the sftp server.
 
 ```
-ftp.readDir (options: object, path: string) 
+ftp.readDir (path: string) 
   .then((list) => {
     console.log(list.length)
     return list;
@@ -198,7 +198,7 @@ ftp.readDir (options: object, path: string)
 Use the options and file objects as inputs. This will return your file object with the 'content' property filled in!
 
 ```
-ftp.readFile (options: object, file: object)
+ftp.readFile (file: object)
   .then((file) => {
     <file = {
       content: <your new content>,
@@ -228,7 +228,7 @@ ftp.writeFile (options: object, file: object)
 Move (and/or rename) a file within your FTP server.
 
 ```
-ftp.writeFile (options: object, fromPath: string, toPath: string)
+ftp.writeFile (fromPath: string, toPath: string)
   .then((file) => {
       // file moved to new location, new filename, or both
   });
