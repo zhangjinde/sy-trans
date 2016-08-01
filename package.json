@@ -18,6 +18,7 @@
     "lodash": "^3.10.1",
     "request-promise": "^1.0.2",
     "s-build": "symphony-integrations/s-build",
+    "s3": "^4.4.0",
     "sinon": "^1.17.4",
     "sinon-chai": "^2.8.0",
     "ssh2": "^0.5.0",
