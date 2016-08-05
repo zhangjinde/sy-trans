@@ -41,8 +41,11 @@ var FTP = (function (_super) {
         return this.initFTP(file).then(function (ftp) {
             var deferred = _this.deferred();
             ftp.list(path, function (err, list) {
-                if (err)
+                if (err) {
+                    ftp.end();
                     deferred.reject(err);
+                }
+                ftp.end();
                 deferred.resolve(list);
             });
             return deferred.promise;
@@ -54,6 +57,7 @@ var FTP = (function (_super) {
             var deferred = _this.deferred();
             ftp.get(file.path, function (err, stream) {
                 if (err) {
+                    ftp.end();
                     deferred.reject(err);
                 }
                 var content = "";
@@ -79,6 +83,7 @@ var FTP = (function (_super) {
             readStream.push(null);
             ftp.put(readStream, file.path, function (err) {
                 if (err) {
+                    ftp.end();
                     deferred.reject(err);
                 }
                 ftp.end();
@@ -94,6 +99,7 @@ var FTP = (function (_super) {
             var deferred = _this.deferred();
             ftp.rename(fromPath, toPath, function (err, data) {
                 if (err) {
+                    ftp.end();
                     deferred.reject(err);
                 }
                 ftp.end();
