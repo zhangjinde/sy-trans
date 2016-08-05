@@ -39,7 +39,11 @@ export default class FTP extends ServiceBase {
             const deferred = this.deferred();
 
             ftp.list(path, (err, list) => {
-                if (err) deferred.reject(err);
+                if (err) {
+                    ftp.end();
+                    deferred.reject(err);
+                }
+                ftp.end();
                 deferred.resolve(list);      
             });
 
@@ -52,6 +56,7 @@ export default class FTP extends ServiceBase {
             const deferred = this.deferred();
             ftp.get(file.path, (err, stream) => {
                 if (err) {
+                    ftp.end();
                     deferred.reject(err);
                 }
 
@@ -81,6 +86,7 @@ export default class FTP extends ServiceBase {
 
             ftp.put(readStream, file.path, (err) => {
                 if (err) {
+                    ftp.end();
                     deferred.reject(err);
                 }
                 ftp.end();
@@ -96,6 +102,7 @@ export default class FTP extends ServiceBase {
             const deferred = this.deferred();
             ftp.rename(fromPath, toPath, (err, data) => {
                 if (err) {
+                    ftp.end();
                     deferred.reject(err);
                 }
                 ftp.end();
