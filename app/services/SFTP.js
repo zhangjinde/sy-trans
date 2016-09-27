@@ -29,13 +29,6 @@ var SFTP = (function (_super) {
             }
             file.attempts++;
             conn.connect(_this.options);
-        })
-            .on('close', function (err) {
-            if (file.attempts > limit) {
-                deferred.reject(err);
-            }
-            file.attempts++;
-            conn.connect(_this.options);
         });
         conn.connect(this.options);
         return deferred.promise;
@@ -99,7 +92,7 @@ var SFTP = (function (_super) {
                 })
                     .on('error', function (err) {
                     conn.end();
-                    deferred.reject(file);
+                    deferred.reject(err);
                 });
                 readStream.pipe(writeStream);
             });

@@ -25,14 +25,8 @@ export default class SFTP extends ServiceBase {
                 }
                 file.attempts++;
                 conn.connect(this.options);
-            })
-            .on('close', (err) => {
-                if (file.attempts > limit) {
-                    deferred.reject(err);
-                }
-                file.attempts++;
-                conn.connect(this.options);
             });
+
         conn.connect(this.options);
         return deferred.promise;
     }
@@ -100,7 +94,7 @@ export default class SFTP extends ServiceBase {
                 })
                 .on('error', (err) => {
                     conn.end();
-                    deferred.reject(file);
+                    deferred.reject(err);
                 });
 
                 readStream.pipe(writeStream);
