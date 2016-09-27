@@ -15,11 +15,18 @@ export default class SFTP extends ServiceBase {
     initSFTP (file: any) {
         const deferred = this.deferred();
         const conn = new ssh2();
-        const limit = 40;
+        const limit = 10;
 
         file.attempts = 0;
         conn.on('ready', () => deferred.resolve(conn))
             .on('error', (err) => {
+                if (file.attempts > limit) {
+                    deferred.reject(err);
+                }
+                file.attempts++;
+                conn.connect(this.options);
+            })
+            .on('close', (err) => {
                 if (file.attempts > limit) {
                     deferred.reject(err);
                 }
@@ -67,7 +74,7 @@ export default class SFTP extends ServiceBase {
                     deferred.resolve(content);
                 })
                 .on('error', (err) => {
-                    sftp.end();
+                    conn.end();
                     deferred.reject(err);
                 });
             });
@@ -80,6 +87,7 @@ export default class SFTP extends ServiceBase {
         return this.initSFTP(file).then((conn) => {
             const deferred = this.deferred();
             conn.sftp((err, sftp) => {
+                if (err) deferred.reject(err);
 
                 const writeStream = sftp.createWriteStream(file.path);
                 const readStream = new Readable();
@@ -89,6 +97,10 @@ export default class SFTP extends ServiceBase {
                 writeStream.on('close', () => {
                     conn.end();
                     deferred.resolve(file);
+                })
+                .on('error', (err) => {
+                    conn.end();
+                    deferred.reject(file);
                 });
 
                 readStream.pipe(writeStream);

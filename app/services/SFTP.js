@@ -20,10 +20,17 @@ var SFTP = (function (_super) {
         var _this = this;
         var deferred = this.deferred();
         var conn = new ssh2();
-        var limit = 40;
+        var limit = 10;
         file.attempts = 0;
         conn.on('ready', function () { return deferred.resolve(conn); })
             .on('error', function (err) {
+            if (file.attempts > limit) {
+                deferred.reject(err);
+            }
+            file.attempts++;
+            conn.connect(_this.options);
+        })
+            .on('close', function (err) {
             if (file.attempts > limit) {
                 deferred.reject(err);
             }
@@ -68,7 +75,7 @@ var SFTP = (function (_super) {
                     deferred.resolve(content);
                 })
                     .on('error', function (err) {
-                    sftp.end();
+                    conn.end();
                     deferred.reject(err);
                 });
             });
@@ -80,6 +87,8 @@ var SFTP = (function (_super) {
         return this.initSFTP(file).then(function (conn) {
             var deferred = _this.deferred();
             conn.sftp(function (err, sftp) {
+                if (err)
+                    deferred.reject(err);
                 var writeStream = sftp.createWriteStream(file.path);
                 var readStream = new Readable();
                 readStream.push(file.content);
@@ -87,6 +96,10 @@ var SFTP = (function (_super) {
                 writeStream.on('close', function () {
                     conn.end();
                     deferred.resolve(file);
+                })
+                    .on('error', function (err) {
+                    conn.end();
+                    deferred.reject(file);
                 });
                 readStream.pipe(writeStream);
             });
