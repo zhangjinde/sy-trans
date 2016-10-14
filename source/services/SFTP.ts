@@ -22,6 +22,7 @@ export default class SFTP extends ServiceBase {
     initSFTP (files: any) {        
         const deferred = this.deferred();
         const conn = new ssh2();
+        /* Attempt to connect 10 times. Throw error after attempt limit is exceeded. */
         const limit = 10;
         let attempts = 0;
 
@@ -39,16 +40,21 @@ export default class SFTP extends ServiceBase {
     }
 
     makeQ (conn: any, files: any, method: any) {
+        /* If file object passed into any of read/write functions, 
+        add it to array to push through Q. */
         if (!Array.isArray(files)) {
             files = [ files ];
         }
         this.files = _.concat(this.files, files);
         const deferred = this.deferred();
+
+        /* Concurrency defines how many files are read/written at one time in Q. */
         this.concurrency = this.options.concurrency &&
                 this.options.concurrency < 20 ?
                 this.options.concurrency : this.concurrency;
 
         const q = async.queue((file, callback) => {
+            /* Perform method passed into makeQ (e.g. readFile, writeFile) */
             return method(file)
                 .then((response) => {
                     callback(null, response);
@@ -60,6 +66,8 @@ export default class SFTP extends ServiceBase {
 
         q.drain = () => {
             conn.end();
+            /* If any file encountered errors, the error is pushed into the this.error array,
+            and if any errors present at end of Q, reject promise with error(s). */
             if (this.errors.length) {
                 deferred.reject(this.errors);
             }
@@ -99,30 +107,35 @@ export default class SFTP extends ServiceBase {
         });
     }
 
-    readFile (file: any) {
-        return this.initSFTP(file).then((conn) => {
-            const deferred = this.deferred();
-            conn.sftp((err, sftp) => {
-                if (err) deferred.reject(err);
+    readFile (files: any) {
+        return this.initSFTP(files).then((conn) => {
+            return this.makeQ(conn, files, (file) => {    
+                const deferred = this.deferred();
+                conn.sftp((err, sftp) => {
+                    if (err) deferred.reject(err);
 
-                const stream = sftp.createReadStream(file.path);
+                    const readStream = sftp.createReadStream(file.path);
 
-                let content = "";
+                    let content = "";
 
-                stream.on('data', (chunk) => {
-                    content += chunk;
-                })
-                .on('end', () => {
-                    conn.end();
-                    deferred.resolve(content);
-                })
-                .on('error', (err) => {
-                    conn.end();
-                    deferred.reject(err);
+                    readStream
+                        .on('data', (chunk) => {
+                            content += chunk;
+                        })
+                        .on('end', () => {
+                            sftp.end();
+                            conn.end();
+                            deferred.resolve(content);
+                        })
+                        .on('error', (err) => {
+                            sftp.end();
+                            conn.end();
+                            deferred.reject(err);
+                        });
                 });
-            });
 
-            return deferred.promise;
+                return deferred.promise;
+            });
         });
     }
 
