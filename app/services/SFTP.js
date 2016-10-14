@@ -59,7 +59,7 @@ var SFTP = (function (_super) {
                 .catch(function (err) {
                 callback(err, file);
             });
-        });
+        }, this.concurrency);
         q.drain = function () {
             conn.end();
             /* If any file encountered errors, the error is pushed into the this.error array,

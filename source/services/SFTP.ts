@@ -62,7 +62,7 @@ export default class SFTP extends ServiceBase {
                 .catch((err) => {
                     callback(err, file);
                 })
-        });
+        }, this.concurrency);
 
         q.drain = () => {
             conn.end();
