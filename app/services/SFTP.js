@@ -9,28 +9,69 @@ var __extends = (this && this.__extends) || function (d, b) {
 var Service_Base_1 = require('./../bases/Service-Base');
 var _ = require('lodash');
 var ssh2 = require('ssh2');
+var async = require('async');
 var Readable = require('stream').Readable;
 var SFTP = (function (_super) {
     __extends(SFTP, _super);
     function SFTP(options) {
         _super.call(this);
         this.options = options;
+        this.files = [];
+        this.errors = [];
     }
-    SFTP.prototype.initSFTP = function (file) {
+    SFTP.prototype.initSFTP = function (files) {
         var _this = this;
         var deferred = this.deferred();
         var conn = new ssh2();
         var limit = 10;
-        file.attempts = 0;
+        var attempts = 0;
         conn.on('ready', function () { return deferred.resolve(conn); })
             .on('error', function (err) {
-            if (file.attempts > limit) {
+            if (attempts > limit) {
                 deferred.reject(err);
             }
-            file.attempts++;
+            attempts++;
             conn.connect(_this.options);
         });
         conn.connect(this.options);
+        return deferred.promise;
+    };
+    SFTP.prototype.makeQ = function (conn, files, method) {
+        var _this = this;
+        if (!Array.isArray(files)) {
+            files = [files];
+        }
+        _.concat(this.files, files);
+        var deferred = this.deferred();
+        var concurrency = this.options.concurrency &&
+            this.options.concurrency < 20 ?
+            this.options.concurrency : 20;
+        var q = async.queue(function (file, callback) {
+            return method(file)
+                .then(function (response) {
+                callback(null, response);
+            })
+                .catch(function (err) {
+                callback(err, file);
+            });
+        });
+        q.drain = function () {
+            conn.end();
+            if (_this.errors.length) {
+                deferred.reject(_this.errors);
+            }
+            deferred.resolve(_this.files);
+        };
+        _.each(this.files, function (file) {
+            q.push(file, function (err, f) {
+                if (err) {
+                    _this.errors.push({
+                        error: err,
+                        file: f.path
+                    });
+                }
+            });
+        });
         return deferred.promise;
     };
     SFTP.prototype.readDir = function (path) {
@@ -75,28 +116,38 @@ var SFTP = (function (_super) {
             return deferred.promise;
         });
     };
-    SFTP.prototype.writeFile = function (file) {
+    SFTP.prototype.writeFile = function (files) {
         var _this = this;
-        return this.initSFTP(file).then(function (conn) {
-            var deferred = _this.deferred();
-            conn.sftp(function (err, sftp) {
-                if (err)
-                    deferred.reject(err);
-                var writeStream = sftp.createWriteStream(file.path);
-                var readStream = new Readable();
-                readStream.push(file.content);
-                readStream.push(null);
-                writeStream.on('close', function () {
-                    conn.end();
-                    deferred.resolve(file);
-                })
-                    .on('error', function (err) {
-                    conn.end();
-                    deferred.reject(err);
+        return this.initSFTP(files).then(function (conn) {
+            return _this.makeQ(conn, files, function (file) {
+                var deferred = _this.deferred();
+                conn.sftp(function (err, sftp) {
+                    if (err) {
+                        deferred.reject(err);
+                    }
+                    ;
+                    var writeStream = sftp.createWriteStream(file.path);
+                    var readStream = new Readable();
+                    readStream
+                        .on('error', function (err) {
+                        sftp.end();
+                        deferred.reject(err);
+                    });
+                    readStream.push(file.content);
+                    readStream.push(null);
+                    writeStream
+                        .on('close', function () {
+                        sftp.end();
+                        deferred.resolve(file);
+                    })
+                        .on('error', function (err) {
+                        sftp.end();
+                        deferred.reject(err);
+                    });
+                    readStream.pipe(writeStream);
                 });
-                readStream.pipe(writeStream);
+                return deferred.promise;
             });
-            return deferred.promise;
         });
     };
     SFTP.prototype.moveFile = function (fromPath, toPath) {
