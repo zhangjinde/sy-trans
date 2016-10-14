@@ -10,13 +10,8 @@ const Readable = require('stream').Readable;
 
 export default class SFTP extends ServiceBase {
 
-    errors: any;
-    concurrency: number;
-
     constructor(private options) {
         super();
-        this.errors = [];
-        this.concurrency = 20;
     }
 
     initSFTP (files: any) {        
@@ -47,10 +42,13 @@ export default class SFTP extends ServiceBase {
         }
         
         const deferred = this.deferred();
+        const errors = [];
+        const successes = [];
         /* Concurrency defines how many files are read/written at one time in Q. */
-        this.concurrency = this.options.concurrency &&
-                this.options.concurrency < 20 ?
-                this.options.concurrency : this.concurrency;
+        const concurrencyLimit = 20;
+        const concurrency = this.options.concurrency &&
+                this.options.concurrency < concurrencyLimit ?
+                this.options.concurrency : concurrencyLimit;
 
         const q = async.queue((file, callback) => {
             /* Perform method passed into makeQ (e.g. readFile, writeFile) */
@@ -61,26 +59,30 @@ export default class SFTP extends ServiceBase {
                 .catch((err) => {
                     callback(err, file);
                 })
-        }, this.concurrency);
+        }, concurrency);
 
         q.drain = () => {
             conn.end();
-            /* If any file encountered errors, the error is pushed into the this.error array,
+            /* If any file encountered errors, the error is pushed into the error array,
             and if any errors present at end of Q, reject promise with error(s). */
-            if (this.errors.length) {
-                deferred.reject(this.errors);
+            if (errors.length) {
+                deferred.reject({ errors, successes });
             }
-            deferred.resolve(files);
+            /* If single file object was passed into sy-trans, 
+            return file object for consistency. */
+            if (successes.length === 1) deferred.resolve(successes[0]);
+            deferred.resolve(successes);
         }
 
         _.each(files, (file) => {
             q.push(file, (err, f) => {
                 if (err) {
-                    this.errors.push({
+                    errors.push({
                         error: err,
                         file: f.path
                     });
                 }
+                successes.push(f);
             });
         });
 
@@ -124,7 +126,8 @@ export default class SFTP extends ServiceBase {
                         .on('end', () => {
                             sftp.end();
                             conn.end();
-                            deferred.resolve(content);
+                            file.content = content;
+                            deferred.resolve(file);
                         })
                         .on('error', (err) => {
                             sftp.end();

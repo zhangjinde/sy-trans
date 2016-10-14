@@ -16,8 +16,6 @@ var SFTP = (function (_super) {
     function SFTP(options) {
         _super.call(this);
         this.options = options;
-        this.errors = [];
-        this.concurrency = 20;
     }
     SFTP.prototype.initSFTP = function (files) {
         var _this = this;
@@ -38,17 +36,19 @@ var SFTP = (function (_super) {
         return deferred.promise;
     };
     SFTP.prototype.makeQ = function (conn, files, method) {
-        var _this = this;
         /* If file object passed into any of read/write functions,
         add it to array to push through Q. */
         if (!Array.isArray(files)) {
             files = [files];
         }
         var deferred = this.deferred();
+        var errors = [];
+        var successes = [];
         /* Concurrency defines how many files are read/written at one time in Q. */
-        this.concurrency = this.options.concurrency &&
-            this.options.concurrency < 20 ?
-            this.options.concurrency : this.concurrency;
+        var concurrencyLimit = 20;
+        var concurrency = this.options.concurrency &&
+            this.options.concurrency < concurrencyLimit ?
+            this.options.concurrency : concurrencyLimit;
         var q = async.queue(function (file, callback) {
             /* Perform method passed into makeQ (e.g. readFile, writeFile) */
             return method(file)
@@ -58,24 +58,29 @@ var SFTP = (function (_super) {
                 .catch(function (err) {
                 callback(err, file);
             });
-        }, this.concurrency);
+        }, concurrency);
         q.drain = function () {
             conn.end();
-            /* If any file encountered errors, the error is pushed into the this.error array,
+            /* If any file encountered errors, the error is pushed into the error array,
             and if any errors present at end of Q, reject promise with error(s). */
-            if (_this.errors.length) {
-                deferred.reject(_this.errors);
+            if (errors.length) {
+                deferred.reject({ errors: errors, successes: successes });
             }
-            deferred.resolve(files);
+            /* If single file object was passed into sy-trans,
+            return file object for consistency. */
+            if (successes.length === 1)
+                deferred.resolve(successes[0]);
+            deferred.resolve(successes);
         };
         _.each(files, function (file) {
             q.push(file, function (err, f) {
                 if (err) {
-                    _this.errors.push({
+                    errors.push({
                         error: err,
                         file: f.path
                     });
                 }
+                successes.push(f);
             });
         });
         return deferred.promise;
@@ -115,7 +120,8 @@ var SFTP = (function (_super) {
                         .on('end', function () {
                         sftp.end();
                         conn.end();
-                        deferred.resolve(content);
+                        file.content = content;
+                        deferred.resolve(file);
                     })
                         .on('error', function (err) {
                         sftp.end();
