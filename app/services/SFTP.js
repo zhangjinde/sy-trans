@@ -18,6 +18,7 @@ var SFTP = (function (_super) {
         this.options = options;
         this.files = [];
         this.errors = [];
+        this.concurrency = 20;
     }
     SFTP.prototype.initSFTP = function (files) {
         var _this = this;

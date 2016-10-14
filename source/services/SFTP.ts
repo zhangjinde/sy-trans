@@ -17,6 +17,7 @@ export default class SFTP extends ServiceBase {
         super();
         this.files = [];
         this.errors = [];
+        this.concurrency = 20;
     }
 
     initSFTP (files: any) {        
