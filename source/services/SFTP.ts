@@ -9,13 +9,12 @@ const async = require('async');
 const Readable = require('stream').Readable;
 
 export default class SFTP extends ServiceBase {
-    files: any;
+
     errors: any;
     concurrency: number;
 
     constructor(private options) {
         super();
-        this.files = [];
         this.errors = [];
         this.concurrency = 20;
     }
@@ -46,9 +45,8 @@ export default class SFTP extends ServiceBase {
         if (!Array.isArray(files)) {
             files = [ files ];
         }
-        this.files = _.concat(this.files, files);
+        
         const deferred = this.deferred();
-
         /* Concurrency defines how many files are read/written at one time in Q. */
         this.concurrency = this.options.concurrency &&
                 this.options.concurrency < 20 ?
@@ -72,10 +70,10 @@ export default class SFTP extends ServiceBase {
             if (this.errors.length) {
                 deferred.reject(this.errors);
             }
-            deferred.resolve(this.files);
+            deferred.resolve(files);
         }
 
-        _.each(this.files, (file) => {
+        _.each(files, (file) => {
             q.push(file, (err, f) => {
                 if (err) {
                     this.errors.push({

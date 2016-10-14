@@ -16,7 +16,6 @@ var SFTP = (function (_super) {
     function SFTP(options) {
         _super.call(this);
         this.options = options;
-        this.files = [];
         this.errors = [];
         this.concurrency = 20;
     }
@@ -45,7 +44,6 @@ var SFTP = (function (_super) {
         if (!Array.isArray(files)) {
             files = [files];
         }
-        this.files = _.concat(this.files, files);
         var deferred = this.deferred();
         /* Concurrency defines how many files are read/written at one time in Q. */
         this.concurrency = this.options.concurrency &&
@@ -68,9 +66,9 @@ var SFTP = (function (_super) {
             if (_this.errors.length) {
                 deferred.reject(_this.errors);
             }
-            deferred.resolve(_this.files);
+            deferred.resolve(files);
         };
-        _.each(this.files, function (file) {
+        _.each(files, function (file) {
             q.push(file, function (err, f) {
                 if (err) {
                     _this.errors.push({
