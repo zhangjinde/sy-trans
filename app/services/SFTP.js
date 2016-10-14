@@ -41,11 +41,11 @@ var SFTP = (function (_super) {
         if (!Array.isArray(files)) {
             files = [files];
         }
-        _.concat(this.files, files);
+        this.files = _.concat(this.files, files);
         var deferred = this.deferred();
-        var concurrency = this.options.concurrency &&
+        this.concurrency = this.options.concurrency &&
             this.options.concurrency < 20 ?
-            this.options.concurrency : 20;
+            this.options.concurrency : this.concurrency;
         var q = async.queue(function (file, callback) {
             return method(file)
                 .then(function (response) {
