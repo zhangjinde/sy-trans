@@ -70,7 +70,6 @@ export default class SFTP extends ServiceBase {
             }
             /* If single file object was passed into sy-trans, 
             return file object for consistency. */
-            if (successes.length === 1) deferred.resolve(successes[0]);
             deferred.resolve(successes);
         }
 
