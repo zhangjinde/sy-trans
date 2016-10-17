@@ -70,13 +70,11 @@ export default class SFTP extends ServiceBase {
                         })
                         .on('end', () => {
                             sftp.end();
-                            conn.end();
                             file.content = content;
                             deferred.resolve(file);
                         })
                         .on('error', (err) => {
                             sftp.end();
-                            conn.end();
                             deferred.reject(err);
                         });
                 });

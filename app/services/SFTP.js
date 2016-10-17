@@ -69,13 +69,11 @@ var SFTP = (function (_super) {
                     })
                         .on('end', function () {
                         sftp.end();
-                        conn.end();
                         file.content = content;
                         deferred.resolve(file);
                     })
                         .on('error', function (err) {
                         sftp.end();
-                        conn.end();
                         deferred.reject(err);
                     });
                 });
