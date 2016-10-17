@@ -34,60 +34,6 @@ export default class SFTP extends ServiceBase {
         return deferred.promise;
     }
 
-    makeQ (conn: any, files: any, method: any) {
-        /* If file object passed into any of read/write functions, 
-        add it to array to push through Q. */
-        if (!Array.isArray(files)) {
-            files = [ files ];
-        }
-        
-        const deferred = this.deferred();
-        const errors = [];
-        const successes = [];
-        /* Concurrency defines how many files are read/written at one time in Q. */
-        const concurrencyLimit = 20;
-        const concurrency = this.options.concurrency &&
-                this.options.concurrency < concurrencyLimit ?
-                this.options.concurrency : concurrencyLimit;
-
-        const q = async.queue((file, callback) => {
-            /* Perform method passed into makeQ (e.g. readFile, writeFile) */
-            return method(file)
-                .then((response) => {
-                    callback(null, response);
-                })
-                .catch((err) => {
-                    callback(err, file);
-                })
-        }, concurrency);
-
-        q.drain = () => {
-            conn.end();
-            /* If any file encountered errors, the error is pushed into the error array,
-            and if any errors present at end of Q, reject promise with error(s). */
-            if (errors.length) {
-                deferred.reject({ errors, successes });
-            }
-            /* If single file object was passed into sy-trans, 
-            return file object for consistency. */
-            deferred.resolve(successes);
-        }
-
-        _.each(files, (file) => {
-            q.push(file, (err, f) => {
-                if (err) {
-                    errors.push({
-                        error: err,
-                        file: f.path
-                    });
-                }
-                successes.push(f);
-            });
-        });
-
-        return deferred.promise;
-    }
-
     readDir (path: string) { 
         const file = { path };
         return this.initSFTP(file).then((conn) => {
@@ -109,7 +55,7 @@ export default class SFTP extends ServiceBase {
 
     readFile (files: any) {
         return this.initSFTP(files).then((conn) => {
-            return this.makeQ(conn, files, (file) => {    
+            return this.makeQ(this.options, conn, files, (file) => {    
                 const deferred = this.deferred();
                 conn.sftp((err, sftp) => {
                     if (err) deferred.reject(err);
@@ -142,7 +88,7 @@ export default class SFTP extends ServiceBase {
 
     writeFile (files: any) {
         return this.initSFTP(files).then((conn) => {
-            return this.makeQ(conn, files, (file) => {
+            return this.makeQ(this.options, conn, files, (file) => {
                 const deferred = this.deferred();
                 conn.sftp((err, sftp) => {
                     if (err) {

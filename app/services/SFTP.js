@@ -35,54 +35,6 @@ var SFTP = (function (_super) {
         conn.connect(this.options);
         return deferred.promise;
     };
-    SFTP.prototype.makeQ = function (conn, files, method) {
-        /* If file object passed into any of read/write functions,
-        add it to array to push through Q. */
-        if (!Array.isArray(files)) {
-            files = [files];
-        }
-        var deferred = this.deferred();
-        var errors = [];
-        var successes = [];
-        /* Concurrency defines how many files are read/written at one time in Q. */
-        var concurrencyLimit = 20;
-        var concurrency = this.options.concurrency &&
-            this.options.concurrency < concurrencyLimit ?
-            this.options.concurrency : concurrencyLimit;
-        var q = async.queue(function (file, callback) {
-            /* Perform method passed into makeQ (e.g. readFile, writeFile) */
-            return method(file)
-                .then(function (response) {
-                callback(null, response);
-            })
-                .catch(function (err) {
-                callback(err, file);
-            });
-        }, concurrency);
-        q.drain = function () {
-            conn.end();
-            /* If any file encountered errors, the error is pushed into the error array,
-            and if any errors present at end of Q, reject promise with error(s). */
-            if (errors.length) {
-                deferred.reject({ errors: errors, successes: successes });
-            }
-            /* If single file object was passed into sy-trans,
-            return file object for consistency. */
-            deferred.resolve(successes);
-        };
-        _.each(files, function (file) {
-            q.push(file, function (err, f) {
-                if (err) {
-                    errors.push({
-                        error: err,
-                        file: f.path
-                    });
-                }
-                successes.push(f);
-            });
-        });
-        return deferred.promise;
-    };
     SFTP.prototype.readDir = function (path) {
         var _this = this;
         var file = { path: path };
@@ -104,7 +56,7 @@ var SFTP = (function (_super) {
     SFTP.prototype.readFile = function (files) {
         var _this = this;
         return this.initSFTP(files).then(function (conn) {
-            return _this.makeQ(conn, files, function (file) {
+            return _this.makeQ(_this.options, conn, files, function (file) {
                 var deferred = _this.deferred();
                 conn.sftp(function (err, sftp) {
                     if (err)
@@ -134,7 +86,7 @@ var SFTP = (function (_super) {
     SFTP.prototype.writeFile = function (files) {
         var _this = this;
         return this.initSFTP(files).then(function (conn) {
-            return _this.makeQ(conn, files, function (file) {
+            return _this.makeQ(_this.options, conn, files, function (file) {
                 var deferred = _this.deferred();
                 conn.sftp(function (err, sftp) {
                     if (err) {
