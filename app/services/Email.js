@@ -7,6 +7,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var _ = require('lodash');
+var sendgrid = require('sendgrid');
 var Service_Base_1 = require('./../bases/Service-Base');
 var Email = (function (_super) {
     __extends(Email, _super);

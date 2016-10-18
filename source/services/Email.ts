@@ -2,6 +2,7 @@
 ///<reference path="../../typings/es6-promise/es6-promise.d.ts"/>
 
 const _ = require('lodash');
+const sendgrid = require('sendgrid');
 import ServiceBase from './../bases/Service-Base';
 
 export default class Email extends ServiceBase {
