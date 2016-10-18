@@ -19,7 +19,7 @@ var Email = (function (_super) {
     Email.prototype.send = function (_a) {
         var from = _a.from, recipients = _a.recipients, subject = _a.subject, body = _a.body, attachments = _a.attachments;
         var deferred = this.deferred();
-        this.sendgrid.API({
+        var request = this.sendgrid.emptyRequest({
             method: 'POST',
             path: '/v3/mail/send',
             body: {
@@ -44,11 +44,12 @@ var Email = (function (_super) {
                         }];
                 }) : null
             }
-        }, function (err, response) {
-            if (err)
-                deferred.reject(err);
-            deferred.resolve(response);
         });
+        this.sendgrid.API(request)
+            .then(function (response) {
+            deferred.resolve(response);
+        })
+            .catch(deferred.reject);
         return deferred.promise;
     };
     return Email;

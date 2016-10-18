@@ -16,35 +16,39 @@ export default class Email extends ServiceBase {
 
     send ({ from, recipients, subject, body, attachments }) {   
         const deferred = this.deferred();
-        this.sendgrid.API({
-          method: 'POST',
-          path: '/v3/mail/send',
-          body: { 
-            from: {
-              email: from || "do-not-reply@symphonycommerce.com",
-              name: "Symphony Commerce <DO NOT REPLY>"
-            },
-            personalizations: [{
-              to: recipients,
-              subject: subject
-            }],
-            content: [{ 
-              type: 'text/plain', 
-              value: body
-            }],
-            attachments: attachments ? _.map(attachments, (attachment) => {
-                return [{
-                  "content": btoa('This is a test.'),
-                  "content_id": 'ID',
-                  "disposition": "inline",
-                  "filename": `hi.txt`
-                }]
-            }) : null
-        }
-        }, (err, response) => {
-            if (err) deferred.reject(err);
-            deferred.resolve(response);
-        });
+        const request = this.sendgrid.emptyRequest({
+            method: 'POST',
+            path: '/v3/mail/send',
+            body: { 
+                from: {
+                  email: from || "do-not-reply@symphonycommerce.com",
+                  name: "Symphony Commerce <DO NOT REPLY>"
+                },
+                personalizations: [{
+                  to: recipients,
+                  subject: subject
+                }],
+                content: [{ 
+                  type: 'text/plain', 
+                  value: body
+                }],
+                attachments: attachments ? _.map(attachments, (attachment) => {
+                    return [{
+                      "content": btoa('This is a test.'),
+                      "content_id": 'ID',
+                      "disposition": "inline",
+                      "filename": `hi.txt`
+                    }]
+                }) : null
+            }
+        })
+
+        this.sendgrid.API(request)
+            .then(response => {
+                deferred.resolve(response);
+            })
+            .catch(deferred.reject);
+
         return deferred.promise;
     }
 }
