@@ -11,8 +11,7 @@ export default class Email extends ServiceBase {
 
     constructor(private options) {
         super();
-        this.sendgrid = sendgrid
-                            .SendGrid(options.sendgrid_key);
+        this.sendgrid = sendgrid(options.sendgrid_key);
     }
 
     send ({ from, recipients, subject, body, attachments }) {   
@@ -26,11 +25,9 @@ export default class Email extends ServiceBase {
               name: "Symphony Commerce <DO NOT REPLY>"
             },
             personalizations: [{
-              to: _.map(recipients.split(','), (email) => { 
-                return { email, name: email } 
-              })
+              to: recipients,
+              subject: subject
             }],
-            subject: subject,
             content: [{ 
               type: 'text/plain', 
               value: body
@@ -44,7 +41,10 @@ export default class Email extends ServiceBase {
                 }]
             }) : null
         }
-        }, deferred.resolve);
+        }, (err, response) => {
+            if (err) deferred.reject(err);
+            deferred.resolve(response);
+        });
         return deferred.promise;
     }
 }

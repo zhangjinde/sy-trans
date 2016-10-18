@@ -14,8 +14,7 @@ var Email = (function (_super) {
     function Email(options) {
         _super.call(this);
         this.options = options;
-        this.sendgrid = sendgrid
-            .SendGrid(options.sendgrid_key);
+        this.sendgrid = sendgrid(options.sendgrid_key);
     }
     Email.prototype.send = function (_a) {
         var from = _a.from, recipients = _a.recipients, subject = _a.subject, body = _a.body, attachments = _a.attachments;
@@ -29,11 +28,9 @@ var Email = (function (_super) {
                     name: "Symphony Commerce <DO NOT REPLY>"
                 },
                 personalizations: [{
-                        to: _.map(recipients.split(','), function (email) {
-                            return { email: email, name: email };
-                        })
+                        to: recipients,
+                        subject: subject
                     }],
-                subject: subject,
                 content: [{
                         type: 'text/plain',
                         value: body
@@ -47,7 +44,11 @@ var Email = (function (_super) {
                         }];
                 }) : null
             }
-        }, deferred.resolve);
+        }, function (err, response) {
+            if (err)
+                deferred.reject(err);
+            deferred.resolve(response);
+        });
         return deferred.promise;
     };
     return Email;
