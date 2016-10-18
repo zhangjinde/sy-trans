@@ -3,6 +3,7 @@
 "use strict";
 var _ = require('lodash');
 var sendgrid = require('sendgrid');
+var btoa = require('btoa');
 var Email = (function () {
     function Email(options) {
         this.options = options;
@@ -27,12 +28,12 @@ var Email = (function () {
                         value: body
                     }],
                 attachments: attachments.length ? _.map(attachments, function (attachment) {
-                    return [{
-                            'content': attachment.content,
-                            'content_id': attachment.id || '',
-                            'disposition': 'inline',
-                            'filename': attachment.filename
-                        }];
+                    return {
+                        'content': btoa(attachment.content),
+                        'content_id': attachment.id || '',
+                        'disposition': 'inline',
+                        'filename': attachment.filename
+                    };
                 }) : null
             }
         });

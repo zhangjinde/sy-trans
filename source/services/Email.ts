@@ -3,6 +3,7 @@
 
 const _ = require('lodash');
 const sendgrid = require('sendgrid');
+const btoa = require('btoa');
 
 export default class Email {
     
@@ -30,12 +31,12 @@ export default class Email {
                   value: body
                 }],
                 attachments: attachments.length ? _.map(attachments, (attachment) => {
-                    return [{
-                      'content': attachment.content,
+                    return {
+                      'content': btoa(attachment.content),
                       'content_id': attachment.id || '',
                       'disposition': 'inline',
                       'filename': attachment.filename
-                    }]
+                    }
                 }) : null
             }
         })
