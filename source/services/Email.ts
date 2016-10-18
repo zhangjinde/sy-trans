@@ -3,19 +3,16 @@
 
 const _ = require('lodash');
 const sendgrid = require('sendgrid');
-import ServiceBase from './../bases/Service-Base';
 
-export default class Email extends ServiceBase {
+export default class Email {
     
     sendgrid: any;
 
     constructor(private options) {
-        super();
         this.sendgrid = sendgrid(options.sendgrid_key);
     }
 
     send ({ from, recipients, subject, body, attachments }) {   
-        const deferred = this.deferred();
         const request = this.sendgrid.emptyRequest({
             method: 'POST',
             path: '/v3/mail/send',
@@ -25,9 +22,9 @@ export default class Email extends ServiceBase {
                   name: "Symphony Commerce <DO NOT REPLY>"
                 },
                 personalizations: [{
-                  to: recipients,
-                  subject: subject
+                  to: recipients
                 }],
+                subject: subject,
                 content: [{ 
                   type: 'text/plain', 
                   value: body
@@ -43,12 +40,6 @@ export default class Email extends ServiceBase {
             }
         })
 
-        this.sendgrid.API(request)
-            .then(response => {
-                deferred.resolve(response);
-            })
-            .catch(deferred.reject);
-
-        return deferred.promise;
+        return this.sendgrid.API(request);
     }
 }
