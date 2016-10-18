@@ -27,10 +27,10 @@ var Email = (function () {
                         type: 'text/plain',
                         value: body
                     }],
-                attachments: attachments.length ? _.map(attachments, function (attachment) {
+                attachments: attachments.length ? _.map(attachments, function (attachment, index) {
                     return {
                         'content': btoa(attachment.content),
-                        'content_id': attachment.id || '',
+                        'content_id': attachment.id || index.toString(),
                         'disposition': 'inline',
                         'filename': attachment.filename
                     };
