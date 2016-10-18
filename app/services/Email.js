@@ -14,7 +14,7 @@ var Email = (function (_super) {
     function Email(options) {
         _super.call(this);
         this.options = options;
-        this.sendgrid = require('sendgrid')
+        this.sendgrid = sendgrid
             .SendGrid(options.sendgrid_key);
     }
     Email.prototype.send = function (_a) {

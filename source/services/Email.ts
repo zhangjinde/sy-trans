@@ -11,7 +11,7 @@ export default class Email extends ServiceBase {
 
     constructor(private options) {
         super();
-        this.sendgrid = require('sendgrid')
+        this.sendgrid = sendgrid
                             .SendGrid(options.sendgrid_key);
     }
 
