@@ -12,14 +12,14 @@ export default class Email {
         this.sendgrid = sendgrid(options.sendgrid_key);
     }
 
-    send ({ from, recipients, subject, body, attachments }) {   
+    send ({ from, recipients, subject, body, attachments, fromName }) {   
         const request = this.sendgrid.emptyRequest({
             method: 'POST',
             path: '/v3/mail/send',
             body: { 
                 from: {
-                  email: from || "do-not-reply@symphonycommerce.com",
-                  name: "Symphony Commerce <DO NOT REPLY>"
+                  email: from,
+                  name: fromName || from
                 },
                 personalizations: [{
                   to: recipients
@@ -29,12 +29,12 @@ export default class Email {
                   type: 'text/plain', 
                   value: body
                 }],
-                attachments: attachments ? _.map(attachments, (attachment) => {
+                attachments: attachments.length ? _.map(attachments, (attachment) => {
                     return [{
-                      "content": btoa('This is a test.'),
-                      "content_id": 'ID',
-                      "disposition": "inline",
-                      "filename": `hi.txt`
+                      'content': attachment.content,
+                      'content_id': attachment.id || '',
+                      'disposition': 'inline',
+                      'filename': attachment.filename
                     }]
                 }) : null
             }
