@@ -9,14 +9,14 @@ var Email = (function () {
         this.sendgrid = sendgrid(options.sendgrid_key);
     }
     Email.prototype.send = function (_a) {
-        var from = _a.from, recipients = _a.recipients, subject = _a.subject, body = _a.body, attachments = _a.attachments;
+        var from = _a.from, recipients = _a.recipients, subject = _a.subject, body = _a.body, attachments = _a.attachments, fromName = _a.fromName;
         var request = this.sendgrid.emptyRequest({
             method: 'POST',
             path: '/v3/mail/send',
             body: {
                 from: {
-                    email: from || "do-not-reply@symphonycommerce.com",
-                    name: "Symphony Commerce <DO NOT REPLY>"
+                    email: from,
+                    name: fromName || from
                 },
                 personalizations: [{
                         to: recipients
@@ -26,12 +26,12 @@ var Email = (function () {
                         type: 'text/plain',
                         value: body
                     }],
-                attachments: attachments ? _.map(attachments, function (attachment) {
+                attachments: attachments.length ? _.map(attachments, function (attachment) {
                     return [{
-                            "content": btoa('This is a test.'),
-                            "content_id": 'ID',
-                            "disposition": "inline",
-                            "filename": "hi.txt"
+                            'content': attachment.content,
+                            'content_id': attachment.id || '',
+                            'disposition': 'inline',
+                            'filename': attachment.filename
                         }];
                 }) : null
             }
