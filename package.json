@@ -15,7 +15,7 @@
     "gulp-mocha": "^2.2.0",
     "gulp-typescript": "^2.9.2",
     "is-json": "^1.2.5",
-    "lodash": "^3.10.1",
+    "lodash": "^4.16.4",
     "request-promise": "^1.0.2",
     "s-build": "symphony-integrations/s-build",
     "sinon": "^1.17.4",
