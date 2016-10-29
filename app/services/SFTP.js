@@ -69,8 +69,7 @@ var SFTP = (function (_super) {
                     })
                         .on('end', function () {
                         sftp.end();
-                        file.content = content;
-                        deferred.resolve(file);
+                        deferred.resolve(content);
                     })
                         .on('error', function (err) {
                         sftp.end();

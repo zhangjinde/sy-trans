@@ -69,9 +69,8 @@ export default class SFTP extends ServiceBase {
                             content += chunk;
                         })
                         .on('end', () => {
-                            sftp.end();
-                            file.content = content;
-                            deferred.resolve(file);
+                            sftp.end();                 
+                            deferred.resolve(content);
                         })
                         .on('error', (err) => {
                             sftp.end();
