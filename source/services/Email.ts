@@ -30,7 +30,7 @@ export default class Email {
                   type: 'text/plain', 
                   value: body
                 }],
-                attachments: attachments.length ? _.map(attachments, (attachment, index) => {
+                attachments: attachments && attachments.length ? _.map(attachments, (attachment, index) => {
                     return {
                       'content': btoa(attachment.content),
                       'content_id': attachment.id || index.toString(),
