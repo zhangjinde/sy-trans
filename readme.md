@@ -75,7 +75,7 @@ Compile individual file information (each sftp method takes in one file at a tim
 
 ```
 const file = {
-  content: <This is a STRING. sy-trans currently supports transfering txt, xml, csv, tsv, json, js [dangerous], and css.>
+  content: <This is a STRING. sy-trans currently supports transfering txt, xml, csv, tsv, json, etc.>
   path: </directory/sub-directory/filename + extension>
 }
 ```
@@ -158,7 +158,7 @@ Compile individual file information (each ftp method takes in one file at a time
 
 ```
 const file = {
-  content: <This is a STRING. sy-trans currently supports transfering txt, csv, tsv, json, js, css.>
+  content: <This is a STRING. sy-trans currently supports transfering txt, csv, tsv, xml, json, etc.>
   path: </directory/sub-directory/filename + extension>
 }
 ```
