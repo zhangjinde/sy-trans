@@ -1,6 +1,6 @@
 <h1>sy-trans [Symphony Transfer]</h1>
 
-<h2>Sy-Trans V2 now supports writing an array of files. It also implements a built-in queue for better stability and reliability. The new version requires only one connection per array of files (as opposed to one connection per file) which increases speed and puts mitigates risks of too many concurrent connections being open on the server.</h2>
+<h4>Sy-Trans V2 now supports writing an array of files. It also implements a built-in queue for better stability and reliability. The new version requires only one connection per array of files.</h4>
 
 <h3>Description</h3>
 sy-trans is being developed as a library (like other npm modules like node-symphony, symphony-db, and any other module that you 'require' during the development process).</br>
