@@ -1,5 +1,7 @@
 <h1>sy-trans [Symphony Transfer]</h1>
 
+<h2>Sy-Trans V2 now supports writing an array of files. It also implements a built-in queue for better stability and reliability. The new version requires only one connection per array of files (as opposed to one connection per file) which increases speed and puts mitigates risks of too many concurrent connections being open on the server.</h2>
+
 <h3>Description</h3>
 sy-trans is being developed as a library (like other npm modules like node-symphony, symphony-db, and any other module that you 'require' during the development process).</br>
 Developers will be able to require sy-trans, and this will expose promise-based file transfer methods for the most common protocols (e.g. FTP, SFTP) to read directories, read files, and write files.
@@ -109,9 +111,10 @@ sftp.readFile (file)
 <a name="sftp-write-file"></a>
 <h4>Write a file.</h4>
 
-Let's say you've converted a data object to a csv formatted string. This string will the the 'content' within your file object.
+Let's say you've converted a data object to a csv formatted string. This string will be the the 'content' within your file object. You can pass a single file object or an array of formatted file objects into the writeFile method.
 
 ```
+//Single file
 sftp.writeFile (file: object)
   .then((file) => {
     <file = {
@@ -119,43 +122,24 @@ sftp.writeFile (file: object)
       path: <the filepath from where this file was read, with a .csv extension in this case>
     }>
   });
+  
+//Array of files
+sftp.writeFile (files: array)
+  .then((files) => {
+    <files = [{
+      content: <content of file 1>,
+      path: <path of file 1>
+    }, 
+    {
+      content: <content of file 2>,
+      path: <path of file 2>
+    }, 
+    { 
+      and so forth ....
+    }]>
+  });
 ```
 
-<a name="sftp-multiple-files"></a>
-<h4>Moving multiple files at once.</h4>
-
-Let's say you have an array of file objects you'd like to write to a directory. You can use popular async libraries like 'async' or 'q' to do this.
-
-```
-const async = require('async);
-const files = [
-  {
-    content: 'This is a txt file.',
-    path: '/directory/file1.txt'
-  },
-  {
-    content: 'This here is a .tsv file',
-    path: '/directory/file2.txt'
-  },
-  {
-    content: '{
-                "fileType": "JSON",
-                "fileInfo": {
-                  "extension": ".json"
-                  "name": "file3.json"
-                }
-              }',
-    path: '/directory/file3.json'
-  }
-];
-
-async.each(files, sftp.writeFile.bind(sftp), finish);
-
-function finish (err, data) {
-  if (err) throw err;
-  return data;
-}
-```
 <a name="ftp-methods"></a>
 <h3>FTP Methods</h3>
 
@@ -213,12 +197,29 @@ ftp.readFile (file: object)
 Let's say you've converted a data object to a tsv formatted string. This string will the the 'content' within your file object.
 
 ```
-ftp.writeFile (options: object, file: object)
+//Single file
+ftp.writeFile (file: object)
   .then((file) => {
     <file = {
       content: <the content you wrote>,
-      path: <the filepath from where this file was read, with a .tsv extension in this case>
+      path: <the filepath from where this file was read, with a .csv extension in this case>
     }>
+  });
+  
+//Array of files
+ftp.writeFile (files: array)
+  .then((files) => {
+    <files = [{
+      content: <content of file 1>,
+      path: <path of file 1>
+    }, 
+    {
+      content: <content of file 2>,
+      path: <path of file 2>
+    }, 
+    { 
+      and so forth ....
+    }]>
   });
 ```
 
@@ -228,7 +229,7 @@ ftp.writeFile (options: object, file: object)
 Move (and/or rename) a file within your FTP server.
 
 ```
-ftp.writeFile (fromPath: string, toPath: string)
+ftp.moveFile (fromPath: string, toPath: string)
   .then((file) => {
       // file moved to new location, new filename, or both
   });
