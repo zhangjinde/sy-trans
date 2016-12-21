@@ -61,38 +61,43 @@ export default class FTP extends ServiceBase {
                 }
 
                 let content = "";
-                stream.on('data', (chunk) => {
-                    content += chunk;
-                }).on('end', () => {
-                    ftp.end();
-                    deferred.resolve(content);
-                }).on('error', (err) => {
-                    ftp.end();
-                    deferred.reject(err);
-                });
+                
+                stream
+                    .on('data', (chunk) => {
+                        content += chunk;
+                    }).on('end', () => {
+                        ftp.end();
+                        deferred.resolve(content);
+                    }).on('error', (err) => {
+                        ftp.end();
+                        deferred.reject(err);
+                    });
             });
+
             return deferred.promise;
         });
     }
 
-    writeFile (file: any) {
-        return this.initFTP(file).then((ftp) => {
+    writeFile (files: any) {
+        return this.initFTP(files).then((ftp) => {
+            return this.makeQ(this.options, ftp, files, (file) => {
+                const deferred = this.deferred();
+                const readStream = new Readable();
 
-            const deferred = this.deferred();
-            const readStream = new Readable();
+                readStream.push(file.content);
+                readStream.push(null);
 
-            readStream.push(file.content);
-            readStream.push(null);
+                ftp.put(readStream, file.path, (err) => {
+                    if (err) {
+                        // ftp.end();
+                        deferred.reject(err);
+                    }
+                    // ftp.end();
+                    deferred.resolve(file);
+                });
 
-            ftp.put(readStream, file.path, (err) => {
-                if (err) {
-                    ftp.end();
-                    deferred.reject(err);
-                }
-                ftp.end();
-                deferred.resolve(file);
+                return deferred.promise;
             });
-            return deferred.promise;
         });
     }
 

@@ -61,7 +61,8 @@ var FTP = (function (_super) {
                     deferred.reject(err);
                 }
                 var content = "";
-                stream.on('data', function (chunk) {
+                stream
+                    .on('data', function (chunk) {
                     content += chunk;
                 }).on('end', function () {
                     ftp.end();
@@ -74,22 +75,24 @@ var FTP = (function (_super) {
             return deferred.promise;
         });
     };
-    FTP.prototype.writeFile = function (file) {
+    FTP.prototype.writeFile = function (files) {
         var _this = this;
-        return this.initFTP(file).then(function (ftp) {
-            var deferred = _this.deferred();
-            var readStream = new Readable();
-            readStream.push(file.content);
-            readStream.push(null);
-            ftp.put(readStream, file.path, function (err) {
-                if (err) {
-                    ftp.end();
-                    deferred.reject(err);
-                }
-                ftp.end();
-                deferred.resolve(file);
+        return this.initFTP(files).then(function (ftp) {
+            return _this.makeQ(_this.options, ftp, files, function (file) {
+                var deferred = _this.deferred();
+                var readStream = new Readable();
+                readStream.push(file.content);
+                readStream.push(null);
+                ftp.put(readStream, file.path, function (err) {
+                    if (err) {
+                        // ftp.end();
+                        deferred.reject(err);
+                    }
+                    // ftp.end();
+                    deferred.resolve(file);
+                });
+                return deferred.promise;
             });
-            return deferred.promise;
         });
     };
     FTP.prototype.moveFile = function (fromPath, toPath) {

@@ -53,31 +53,31 @@ var SFTP = (function (_super) {
             return deferred.promise;
         });
     };
-    SFTP.prototype.readFile = function (files) {
+    SFTP.prototype.readFile = function (file) {
         var _this = this;
-        return this.initSFTP(files).then(function (conn) {
-            return _this.makeQ(_this.options, conn, files, function (file) {
-                var deferred = _this.deferred();
-                conn.sftp(function (err, sftp) {
-                    if (err)
-                        deferred.reject(err);
-                    var readStream = sftp.createReadStream(file.path);
-                    var content = "";
-                    readStream
-                        .on('data', function (chunk) {
-                        content += chunk;
-                    })
-                        .on('end', function () {
-                        sftp.end();
-                        deferred.resolve(content);
-                    })
-                        .on('error', function (err) {
-                        sftp.end();
-                        deferred.reject(err);
-                    });
+        return this.initSFTP(file).then(function (conn) {
+            var deferred = _this.deferred();
+            conn.sftp(function (err, sftp) {
+                if (err)
+                    deferred.reject(err);
+                var readStream = sftp.createReadStream(file.path);
+                var content = "";
+                readStream
+                    .on('data', function (chunk) {
+                    content += chunk;
+                })
+                    .on('end', function () {
+                    sftp.end();
+                    conn.end();
+                    deferred.resolve(content);
+                })
+                    .on('error', function (err) {
+                    sftp.end();
+                    conn.end();
+                    deferred.reject(err);
                 });
-                return deferred.promise;
             });
+            return deferred.promise;
         });
     };
     SFTP.prototype.writeFile = function (files) {

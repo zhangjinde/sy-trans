@@ -53,33 +53,33 @@ export default class SFTP extends ServiceBase {
         });
     }
 
-    readFile (files: any) {
-        return this.initSFTP(files).then((conn) => {
-            return this.makeQ(this.options, conn, files, (file) => {    
-                const deferred = this.deferred();
-                conn.sftp((err, sftp) => {
-                    if (err) deferred.reject(err);
+    readFile (file: any) {
+        return this.initSFTP(file).then((conn) => {   
+            const deferred = this.deferred();
+            conn.sftp((err, sftp) => {
+                if (err) deferred.reject(err);
 
-                    const readStream = sftp.createReadStream(file.path);
+                const readStream = sftp.createReadStream(file.path);
 
-                    let content = "";
+                let content = "";
 
-                    readStream
-                        .on('data', (chunk) => {
-                            content += chunk;
-                        })
-                        .on('end', () => {
-                            sftp.end();                 
-                            deferred.resolve(content);
-                        })
-                        .on('error', (err) => {
-                            sftp.end();
-                            deferred.reject(err);
-                        });
-                });
-
-                return deferred.promise;
+                readStream
+                    .on('data', (chunk) => {
+                        content += chunk;
+                    })
+                    .on('end', () => {
+                        sftp.end();
+                        conn.end();                 
+                        deferred.resolve(content);
+                    })
+                    .on('error', (err) => {
+                        sftp.end();
+                        conn.end();
+                        deferred.reject(err);
+                    });
             });
+
+            return deferred.promise;
         });
     }
 
